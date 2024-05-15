@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace FeatService { 
@@ -22,8 +23,19 @@ namespace FeatService {
 		{
 			try
 			{
-				//Makes a POST request to the FeatDatabaseController to add a feat to the database
-				var response = _client.PostAsJsonAsync(uri + "FeatDatabase", feat).Result;
+                //Serializes the feat object to JSON
+                string jsonData = JsonConvert.SerializeObject(feat);
+
+                //Creates a new StringContent object with the JSON data
+                var dataJson = new StringContent(
+                    jsonData,
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                //Makes a POST request to the FeatDatabaseController to add a feat to the database
+                var response = await _client.PostAsync(uri + "FeatDatabase", dataJson);
+
 				//Returns true if the response is successful, false if not
 				return response.IsSuccessStatusCode;
 			}
@@ -43,8 +55,19 @@ namespace FeatService {
 		{
             try
 			{
+                //Serializes the feat object to JSON
+                string jsonData = JsonConvert.SerializeObject(feat);
+
+                //Creates a new StringContent object with the JSON data
+                var dataJson = new StringContent(
+                    jsonData,
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
                 //Makes a PUT request to the FeatDatabaseController to update a feat in the database
-                var response = await _client.PutAsJsonAsync(uri + "FeatDatabase", feat);
+                var response = await _client.PutAsync(uri + "FeatDatabase", dataJson);
+
                 //Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
             }
@@ -66,6 +89,7 @@ namespace FeatService {
 			{
                 //Makes a DELETE request to the FeatDatabaseController to delete a feat from the database
                 var response = await _client.DeleteAsync(uri + "FeatDatabase/" + id);
+
                 //Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
             }
@@ -123,7 +147,7 @@ namespace FeatService {
 				{
                     var json = await response.Content.ReadAsStringAsync();
                     
-                    var Feats = JsonConvert.DeserializeObject<List<Feat>>(json);
+                    List<Feat> Feats = JsonConvert.DeserializeObject<List<Feat>>(json);
                     return Feats;
                 }
                 else

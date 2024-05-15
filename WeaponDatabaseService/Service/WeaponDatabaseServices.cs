@@ -24,7 +24,6 @@ namespace WeaponDatabaseService {
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
-            return true;
         }
 
 		//Calls PreparedStatement UpdateWeapon to update a weapon, given the ID, in the database
@@ -41,7 +40,6 @@ namespace WeaponDatabaseService {
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
-            return true;
         }
 
 		//Calls PreparedStatement DeleteWeapon to delete a weapon from the database
@@ -58,7 +56,6 @@ namespace WeaponDatabaseService {
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
-            return true;
         }
 
         //Calls PreparedStatement GetWeaponById to get a weapon by its ID
