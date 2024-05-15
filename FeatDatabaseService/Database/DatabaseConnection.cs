@@ -1,8 +1,7 @@
-﻿
-using DotNetEnv;
+﻿using DotNetEnv;
 using MySql.Data.MySqlClient;
 
-namespace WeaponDatabaseService
+namespace FeatDatabaseService
 {
     public class DBConnection
     {

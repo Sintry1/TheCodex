@@ -1,56 +1,23 @@
 ﻿using System;
 
-namespace WeaponDatabaseService.service {
+namespace WeaponDatabaseService {
 	public class WeaponDatabaseServices
 	{
+
+		private PreparedStatements ps = PreparedStatements.CreateInstance();
 		public WeaponDatabaseServices()
 		{
+
 		}
 
-		//Calls PreparedStatement GetAllWeapons to get all weapons from the database
-		//returns a list of all weapons
-		//If an error occurs, it returns null
-		public List<Weapon> GetAllWeapons()
-		{
-			try
-			{
-				//calls PreparedStatement GetAllWeapons
-				return PreparedStatement.GetAllWeapons();
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Unexpected error: {e.Message}");
-				return null;
-			}
-			return new List<Weapon>;
-		}
-
-		//Calls PreparedStatement GetWeaponById to get a weapon by its ID
-		//returns a weapon
-		//If an error occurs, it returns null
-		public Weapon GetWeaponById(int id)
+        //Calls PreparedStatement InsertWeapon to add a weapon to the database
+        //returns a true if successful and false if failed
+        public bool AddWeapon(Weapon weapon)
 		{
             try
 			{
-                //calls PreparedStatement GetWeaponById
-                return PreparedStatement.GetWeaponById(id);
-            }
-            catch (Exception e)
-			{
-                Console.WriteLine($"Unexpected error: {e.Message}");
-                return null;
-            }
-            return new Weapon;
-        }
-
-		//Calls PreparedStatement AddWeapon to add a weapon to the database
-		//returns a true if successful and false if failed
-		public bool AddWeapon(Weapon weapon)
-		{
-            try
-			{
-                //calls PreparedStatement AddWeapon
-                return PreparedStatement.AddWeapon(weapon);
+                //calls PreparedStatement InsertWeapon
+                return ps.InsertWeapon(weapon);
             }
             catch (Exception e)
 			{
@@ -67,7 +34,7 @@ namespace WeaponDatabaseService.service {
             try
 			{
                 //calls PreparedStatement UpdateWeapon
-                return PreparedStatement.UpdateWeapon(weapon);
+                return ps.UpdateWeapon(weapon);
             }
             catch (Exception e)
 			{
@@ -84,7 +51,7 @@ namespace WeaponDatabaseService.service {
             try
 			{
                 //calls PreparedStatement DeleteWeapon
-                return PreparedStatement.DeleteWeapon(id);
+                return ps.DeleteWeapon(id);
             }
             catch (Exception e)
 			{
@@ -94,14 +61,49 @@ namespace WeaponDatabaseService.service {
             return true;
         }
 
-		//Calls PreparedStatement GetWeaponsByType to get all weapons of a certain type from the database
-		//returns a list of all weapons of a certain type
-		//If an error occurs, it returns null
-		public List<Weapon> GetWeaponsByType(string type)
+        //Calls PreparedStatement GetWeaponById to get a weapon by its ID
+        //returns a weapon
+        //If an error occurs, it returns null
+        public Weapon GetWeaponById(int id)
+        {
+            try
+            {
+                //calls PreparedStatement GetWeaponById
+                return ps.GetWeaponById(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Unexpected error: {e.Message}");
+                return null;
+            }
+        }
+
+
+        //Calls PreparedStatement GetAllWeapons to get all weapons from the database
+        //returns a list of all weapons
+        //If an error occurs, it returns null
+        public List<Weapon> GetAllWeapons()
+        {
+            try
+            {
+                //calls PreparedStatement GetAllWeapons
+                return ps.GetAllWeapons();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Unexpected error: {e.Message}");
+                return null;
+            }
+        }
+
+        //Calls PreparedStatement GetWeaponsByType to get all weapons of a certain type from the database
+        //returns a list of all weapons of a certain type
+        //If an error occurs, it returns null
+        public List<Weapon> GetWeaponsByType(string type)
 		{
-			try
+			try { 
 				//calls PreparedStatement GetWeaponsByType
-				return PreparedStatement.GetWeaponsByType(type);
+				return ps.GetWeaponsByType(type);
 			}
 			catch (Exception e)
 			{

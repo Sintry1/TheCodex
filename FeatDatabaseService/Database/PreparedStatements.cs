@@ -1,8 +1,8 @@
 ﻿﻿using DotNetEnv;
 using MySql.Data.MySqlClient;
+using FeatDatabaseService;
 
-
-namespace WeaponDatabaseService
+namespace FeatDatabaseService
 {
     public class PreparedStatements
     {
@@ -25,11 +25,11 @@ namespace WeaponDatabaseService
             return new PreparedStatements();
         }
 
-        //Method for creating a new weapon in the database
-        //This method takes a weapon object as a parameter
-        //It returns a boolean value, true if the weapon was created successfully and false if it was not
+        //method for creating a new feat in the database
+        //This method takes a feat object as a parameter
+        //It returns a boolean value, true if the feat was created successfully and false if it was not
         //This method uses prepared statements to prevent SQL injection
-        public bool InsertWeapon(Weapon weapon)
+        public bool InsertFeat(Feat feat)
         {
             DotNetEnv.Env.Load();
 
@@ -50,24 +50,16 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"INSERT INTO Weapons (name, slot, type, effect, minimumDamage, maximumDamage) " +
-                            $"VALUES (@name, @slot, @type, @effect, @minimumDamage, @maximumDamage)";
+                            $"INSERT INTO Feats (name, description) " +
+                            $"VALUES (@name, @description)";
 
                         // Sets mySQL parameters for the prepared statement
-                        MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
-                        MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
-                        MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effect", weapon.Effect);
-                        MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
-                        MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
+                        MySqlParameter nameParam = new MySqlParameter("name", feat.Name);
+                        MySqlParameter descriptionParam = new MySqlParameter("description", feat.Description);
 
                         // Adds the parameters to the command
                         command.Parameters.Add(nameParam);
-                        command.Parameters.Add(slotParam);
-                        command.Parameters.Add(typeParam);
-                        command.Parameters.Add(effectParam);
-                        command.Parameters.Add(minDamageParam);
-                        command.Parameters.Add(maxDamageParam);
+                        command.Parameters.Add(descriptionParam);
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
@@ -81,7 +73,6 @@ namespace WeaponDatabaseService
                     catch (MySqlException ex)
                     {
                         // Handle the exception (e.g., log it) and return false
-                        // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return false;
                     }
@@ -99,11 +90,11 @@ namespace WeaponDatabaseService
             }
         }
 
-        //Method for updating a weapon in the database
-        //This method takes a weapon object as a parameter
-        //It returns a boolean value, true if the weapon was updated successfully and false if it was not
+        //method for updating a feat in the database
+        //This method takes a feat object as a parameter
+        //It returns a boolean value, true if the feat was updated successfully and false if it was not
         //This method uses prepared statements to prevent SQL injection
-        public bool UpdateWeapon(Weapon weapon)
+        public bool UpdateFeat(Feat feat)
         {
             DotNetEnv.Env.Load();
 
@@ -124,26 +115,19 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"UPDATE Weapons SET name = @name, slot = @slot, type = @type, effect = @effect, " +
-                            $"minimumDamage = @minimumDamage, maximumDamage = @maximumDamage WHERE id = @id";
+                            $"UPDATE Feats " +
+                            $"SET name = @name, description = @description " +
+                            $"WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
-                        MySqlParameter idParam = new MySqlParameter("id", weapon.Id);
-                        MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
-                        MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
-                        MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effect", weapon.Effect);
-                        MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
-                        MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
+                        MySqlParameter nameParam = new MySqlParameter("name", feat.Name);
+                        MySqlParameter descriptionParam = new MySqlParameter("description", feat.Description);
+                        MySqlParameter idParam = new MySqlParameter("id", feat.Id);
 
                         // Adds the parameters to the command
-                        command.Parameters.Add(idParam);
                         command.Parameters.Add(nameParam);
-                        command.Parameters.Add(slotParam);
-                        command.Parameters.Add(typeParam);
-                        command.Parameters.Add(effectParam);
-                        command.Parameters.Add(minDamageParam);
-                        command.Parameters.Add(maxDamageParam);
+                        command.Parameters.Add(descriptionParam);
+                        command.Parameters.Add(idParam);
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
@@ -157,7 +141,6 @@ namespace WeaponDatabaseService
                     catch (MySqlException ex)
                     {
                         // Handle the exception (e.g., log it) and return false
-                        // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return false;
                     }
@@ -174,12 +157,13 @@ namespace WeaponDatabaseService
                 return false;
             }
         }
+       
 
-        //Method for deleting a weapon from the database
-        //This method takes an integer id as a parameter
-        //It returns a boolean value, true if the weapon was deleted successfully and false if it was not
+        //method for deleting a feat in the database
+        //This method takes a feat object as a parameter
+        //It returns a boolean value, true if the feat was deleted successfully and false if it was not
         //This method uses prepared statements to prevent SQL injection
-        public bool DeleteWeapon(int id)
+        public bool DeleteFeat(int id)
         {
             DotNetEnv.Env.Load();
 
@@ -199,7 +183,9 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = $"DELETE FROM Weapons WHERE id = @id";
+                        command.CommandText =
+                            $"DELETE FROM Feats " +
+                            $"WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter idParam = new MySqlParameter("id", id);
@@ -219,7 +205,6 @@ namespace WeaponDatabaseService
                     catch (MySqlException ex)
                     {
                         // Handle the exception (e.g., log it) and return false
-                        // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return false;
                     }
@@ -237,86 +222,11 @@ namespace WeaponDatabaseService
             }
         }
 
-        //Method for getting all weapons from the database
-        //This method returns a list of weapons
-        //This method uses prepared statements to prevent SQL injection
-        public List<Weapon> GetAllWeapons()
-        {
-            DotNetEnv.Env.Load();
-
-            try
-            {
-                // Set credentials for the user needed
-                dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
-
-                // Use mySqlConnection to open the connection and throw an exception if it fails
-                using (MySqlConnection connection = dbConnection.OpenConnection())
-                {
-                    try
-                    {
-                        // Create an instance of MySqlCommand
-                        MySqlCommand command = new MySqlCommand(null, connection);
-
-                        // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons";
-
-                        // Call Prepare after setting the Commandtext and Parameters.
-                        command.Prepare();
-
-                        // Execute the query
-                        MySqlDataReader reader = command.ExecuteReader();
-
-                        // Create a list of weapons
-                        List<Weapon> weapons = new List<Weapon>();
-
-                        // Read the data and add it to the list
-                        while (reader.Read())
-                        {
-                            Weapon weapon = new Weapon
-                            {
-                                Id = reader.GetInt32("id"),
-                                Name = reader.GetString("name"),
-                                Slot = reader.GetString("slot"),
-                                Type = reader.GetString("type"),
-                                Effect = reader.GetString("effect"),
-                                MinimumDamage = reader.GetInt32("minimumDamage"),
-                                MaximumDamage = reader.GetInt32("maximumDamage")
-                            };
-
-                            weapons.Add(weapon);
-                        }
-
-                        // Return the list of weapons
-                        return weapons;
-                    }
-                    catch (MySqlException ex)
-                    {
-                        // Handle the exception (e.g., log it) and return an empty list
-                        // We may want to implement secure logging to store the error message
-                        Console.WriteLine($"Error executing query: {ex.Message}");
-                        return null;
-                    }
-                    finally
-                    {
-                        // Close the connection at the end
-                        dbConnection.CloseConnection();
-                        Console.WriteLine("Connection closed.");
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        //Method for getting a weapon by its id from the database
+        //method for getting a feat by id
         //This method takes an integer id as a parameter
-        //It returns a weapon object
+        //It returns a feat object
         //This method uses prepared statements to prevent SQL injection
-        public Weapon GetWeaponById(int id)
+        public Feat GetFeatById(int id)
         {
             DotNetEnv.Env.Load();
 
@@ -336,7 +246,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons WHERE id = @id";
+                        command.CommandText = "SELECT * FROM Feats WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter idParam = new MySqlParameter("id", id);
@@ -350,23 +260,19 @@ namespace WeaponDatabaseService
                         // Execute the query
                         MySqlDataReader reader = command.ExecuteReader();
 
-                        // Create a weapon object
-                        Weapon weapon = new Weapon();
+                        // Create a feat object
+                        Feat feat = new Feat();
 
-                        // Read the data and add it to the weapon object
+                        // Read the data and add it to the feat object
                         while (reader.Read())
                         {
-                            weapon.Id = reader.GetInt32("id");
-                            weapon.Name = reader.GetString("name");
-                            weapon.Slot = reader.GetString("slot");
-                            weapon.Type = reader.GetString("type");
-                            weapon.Effect = reader.GetString("effect");
-                            weapon.MinimumDamage = reader.GetInt32("minimumDamage");
-                            weapon.MaximumDamage = reader.GetInt32("maximumDamage");
+                            feat.Id = reader.GetInt32("id");
+                            feat.Name = reader.GetString("name");
+                            feat.Description = reader.GetString("description");
                         }
 
-                        // Return the weapon object
-                        return weapon;
+                        // Return the feat object
+                        return feat;
                     }
                     catch (MySqlException ex)
                     {
@@ -389,11 +295,11 @@ namespace WeaponDatabaseService
             }
         }
 
-        //Method for getting a list of weapon by their type
-        //This method takes a string type as a parameter
-        //It returns a list of weapon objects
+        //method for getting all feats
+        //This method takes no parameters
+        //It returns a list of feat objects
         //This method uses prepared statements to prevent SQL injection
-        public List<Weapon> GetWeaponsByType(string type)
+        public List<Feat> GetAllFeats()
         {
             DotNetEnv.Env.Load();
 
@@ -413,13 +319,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons WHERE type = @type";
-
-                        // Sets mySQL parameters for the prepared statement
-                        MySqlParameter typeParam = new MySqlParameter("type", type);
-
-                        // Adds the parameters to the command
-                        command.Parameters.Add(typeParam);
+                        command.CommandText = "SELECT * FROM Feats";
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
@@ -427,32 +327,25 @@ namespace WeaponDatabaseService
                         // Execute the query
                         MySqlDataReader reader = command.ExecuteReader();
 
-                        // Create a list of weapons
-                        List<Weapon> weapons = new List<Weapon>();
+                        // Create a list of feat objects
+                        List<Feat> feats = new List<Feat>();
 
-                        // Read the data and add it to the list
+                        // Read the data and add it to the list of feat objects
                         while (reader.Read())
                         {
-                            Weapon weapon = new Weapon
-                            {
-                                Id = reader.GetInt32("id"),
-                                Name = reader.GetString("name"),
-                                Slot = reader.GetString("slot"),
-                                Type = reader.GetString("type"),
-                                Effect = reader.GetString("effect"),
-                                MinimumDamage = reader.GetInt32("minimumDamage"),
-                                MaximumDamage = reader.GetInt32("maximumDamage")
-                            };
-
-                            weapons.Add(weapon);
+                            Feat feat = new Feat();
+                            feat.Id = reader.GetInt32("id");
+                            feat.Name = reader.GetString("name");
+                            feat.Description = reader.GetString("description");
+                            feats.Add(feat);
                         }
 
-                        // Return the list of weapons
-                        return weapons;
+                        // Return the list of feat objects
+                        return feats;
                     }
                     catch (MySqlException ex)
                     {
-                        // Handle the exception (e.g., log it) and return an empty list
+                        // Handle the exception (e.g., log it) and return null
                         // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return null;
@@ -467,9 +360,10 @@ namespace WeaponDatabaseService
             }
             catch (Exception)
             {
-                   return null; 
+                return null;
             }
         }
 
-    } 
+
+    }
 }

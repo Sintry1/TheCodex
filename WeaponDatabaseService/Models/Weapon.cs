@@ -1,4 +1,4 @@
-namespace WeaponDatabaseService.Models
+namespace WeaponDatabaseService
 {
     public class Weapon
     {

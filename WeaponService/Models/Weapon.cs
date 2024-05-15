@@ -1,6 +1,6 @@
-namespace WeaponService
-{
-    public Weapon
+
+namespace WeaponService{
+    public class Weapon
     {
         public int? Id { get; set; }
         public string Name { get; set; }
