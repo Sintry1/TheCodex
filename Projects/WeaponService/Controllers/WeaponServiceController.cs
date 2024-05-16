@@ -6,55 +6,172 @@ namespace WeaponService.Controllers
     [Route("[controller]")]
     public class WeaponServiceController : ControllerBase
     {
-       
+       private WeaponServices WS = new WeaponServices();
         public WeaponServiceController()
         {
             
         }
 
-        //Calls WeaponServices.GetWeaponsAsync() to get all weapons from the database
-        //returns a list of all weapons
-        [HttpGet]
-        public async Task<List<Weapon>> GetWeaponsAsync()
-        {
-            WeaponServices weaponServices = new WeaponServices();
-            return await weaponServices.GetWeaponsAsync();
-        }
-
-        //Calls WeaponServices.GetWeaponByIdAsync() to get a weapon by its ID
-        //returns a weapon
-        [HttpGet("{id}")]
-        public async Task<Weapon> GetWeaponByIdAsync(int id)
-        {
-            WeaponServices weaponServices = new WeaponServices();
-            return await weaponServices.GetWeaponByIdAsync(id);
-        }
-
         //Calls WeaponServices.AddWeaponAsync() to add a weapon to the database
-        //returns a true if successful and false if failed
+        //return Ok if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
         [HttpPost]
-        public async Task<bool> AddWeaponAsync(Weapon weapon)
+        public async Task<IActionResult> AddWeaponAsync(Weapon weapon)
         {
-            WeaponServices weaponServices = new WeaponServices();
-            return await weaponServices.AddWeaponAsync(weapon);
+            try
+            {
+                bool result = await WS.AddWeaponAsync(weapon);
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to add weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon added successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
 
         //Calls WeaponServices.UpdateWeaponAsync() to update a weapon, given the ID, in the database
-        //returns a true if successful and false if failed
-        [HttpPut("{id}")]
-        public async Task<bool> UpdateWeaponAsync(int id, Weapon weapon)
+        // returns Ok if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
+        [HttpPut]
+        public async Task<IActionResult> UpdateWeaponAsync(Weapon weapon)
         {
-            WeaponServices weaponServices = new WeaponServices();
-            return await weaponServices.UpdateWeaponAsync(id, weapon);
+            try
+            {
+                bool result = await WS.UpdateWeaponAsync(weapon);
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to update weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon updated successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
 
         //Calls WeaponServices.DeleteWeaponAsync() to delete a weapon from the database
-        //returns a true if successful and false if failed
+        //returns Ok if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteWeaponAsync(int id)
+        public async Task<IActionResult> DeleteWeaponAsync(int id)
         {
-            WeaponServices weaponServices = new WeaponServices();
-            return await weaponServices.DeleteWeaponAsync(id);
+            try
+            {
+                bool result = await WS.DeleteWeaponAsync(id);
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to delete weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon deleted successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        //Calls WeaponServices.GetWeaponsAsync() to get all weapons from the database
+        //returns ok with a list of weapons if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
+        [HttpGet]
+        public async Task<IActionResult> GetWeaponsAsync()
+        {
+            try
+            {
+                var weapons = await WS.GetWeaponsAsync();
+                if (weapons == null || !weapons.Any())
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapons" });
+                }
+                else
+                {
+                    return Ok(weapons);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        //Calls WeaponServices.GetWeaponByIdAsync() to get a weapon by its ID
+        //returns ok with a weapon if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetWeaponByIdAsync(int id)
+        {
+            try
+            {
+                var weapon = await WS.GetWeaponByIdAsync(id);
+                if (weapon == null)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                }
+                else
+                {
+                    return Ok(weapon);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        //Calls WeaponServices.GetWeaponByTypeAsync() to get a weapon by its name
+        //returns ok with a weapon if successful, bad request if failed
+        //returns 500 if an error occurs
+        //runs asynchronously
+        [HttpGet("{type}")]
+            public async Task<IActionResult> GetWeaponByTypeAsync(string type)
+        {
+            try
+            {
+                List<Weapon> weapon = await WS.GetWeaponsByTypeAsync(type);
+                if (weapon == null || !weapon.Any())
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                }
+                else
+                {
+                    return Ok(weapon);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
     }
 }

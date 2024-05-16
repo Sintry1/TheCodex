@@ -134,7 +134,7 @@ namespace EffectsService.Controllers
             try
             {
                 List<Effects> result = await ES.GetAllEffects();
-                if (result == null)
+                if (result == null || !result.Any())
                 {
                     return BadRequest(new { Success = false, Message = "Failed to get effects" });
                 }
