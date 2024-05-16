@@ -6,63 +6,169 @@ namespace WeaponDatabaseService
     [Route("[controller]")]
     public class WeaponDatabaseController : ControllerBase
     {
+
+        private WeaponDatabaseServices WDBS = new WeaponDatabaseServices();
         public WeaponDatabaseController()
         {
             
         }
 
-        //calls WeaponDatabaseServices.GetAllWeapons() to get all weapons from the database
-        //returns a list of all weapons
-        [HttpGet]
-        public List<Weapon> GetAllWeapons()
-        {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.GetAllWeapons();
-        }
-
-        //calls WeaponDatabaseServices.GetWeaponById() to get a weapon by its id
-        //returns the weapon with the specified id
-        [HttpGet("{id}")]
-        public Weapon GetWeaponById(int id)
-        {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.GetWeaponById(id);
-        }
-
         //calls WeaponDatabaseServices.AddWeapon() to add a weapon to the database
         //returns true if the weapon was added, false if not
+        // returns 500 if an error occurs
         [HttpPost]
-        public bool AddWeapon(Weapon weapon)
+        public IActionResult CreateWeapon(Weapon weapon)
         {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.AddWeapon(weapon);
+            try
+            {
+                bool result = WDBS.AddWeapon(weapon);
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to add weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon added successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+            
         }
 
         //calls WeaponDatabaseServices.UpdateWeapon() to update a weapon in the database
         //retyrns true if the weapon was updated, false if not
+        //returns 500 if an error occurs
         [HttpPut]
-        public bool UpdateWeapon(Weapon weapon)
+        public IActionResult UpdateWeapon(Weapon weapon)
         {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.UpdateWeapon(weapon);
+            try
+            {
+                bool result = WDBS.UpdateWeapon(weapon);
+
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to update weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon updated successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
 
         //calls WeaponDatabaseServices.DeleteWeapon() to delete a weapon from the database
         //returns true if the weapon was deleted, false if not
+        //returns 500 if an error occurs
         [HttpDelete("{id}")]
-        public bool DeleteWeapon(int id)
+        public IActionResult DeleteWeapon(int id)
         {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.DeleteWeapon(id);
+            try
+            {
+                bool result = WDBS.DeleteWeapon(id);
+                if (!result)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to delete weapon" });
+                }
+                else
+                {
+                    return Ok(new { Success = true, Message = "Weapon deleted successfully" });
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
 
         //calls WeaponDatabaseServices.GetWeaponByType() to get a weapon by its type
         //returns the weapon with the specified type
+        //returns 500 if an error occurs
         [HttpGet("{type}")]
-        public List<Weapon> GetWeaponByType(string type)
+        public IActionResult GetWeaponByType(string type)
         {
-            WeaponDatabaseServices weaponDatabaseServices = new WeaponDatabaseServices();
-            return weaponDatabaseServices.GetWeaponsByType(type);
+            try
+            {
+                List<Weapon> weapon = WDBS.GetWeaponsByType(type);
+                if (weapon == null || !weapon.Any())
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                }
+                else
+                {
+                    return Ok(weapon);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        //calls WeaponDatabaseServices.GetAllWeapons() to get all weapons from the database
+        //returns a list of all weapons
+        //returns 500 if an error occurs
+        [HttpGet]
+        public IActionResult GetAllWeapons()
+        {
+            try
+            {
+                List<Weapon> weapon = WDBS.GetAllWeapons();
+                if (weapon == null || !weapon.Any())
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                }
+                else
+                {
+                    return Ok(weapon);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        //calls WeaponDatabaseServices.GetWeaponById() to get a weapon by its id
+        //returns the weapon with the specified id
+        //returns 500 if an error occurs
+        [HttpGet("{id}")]
+        public IActionResult GetWeaponById(int id)
+        {
+            try
+            {
+                Weapon weapon = WDBS.GetWeaponById(id);
+                if (weapon == null)
+                {
+                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                }
+                else
+                {
+                    return Ok(weapon);
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
         }
     }
 }
