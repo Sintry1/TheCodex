@@ -120,7 +120,7 @@ namespace FeatDatabaseService
             {
                 List<Feat> result = FDBS.GetAllFeats();
 
-                if (result.Count == 0)
+                if (result == null || !result.Any())
                 {
                     //Return 404 if no feats are found
                     return NotFound();
