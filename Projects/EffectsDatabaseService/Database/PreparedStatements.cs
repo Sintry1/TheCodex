@@ -36,8 +36,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EFFECTDB_USERNAME"),
+                    Env.GetString("EFFECTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -101,8 +101,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EFFECTDB_USERNAME"),
+                    Env.GetString("EFFECTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -169,8 +169,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EFFECTDB_USERNAME"),
+                    Env.GetString("EFFECTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -232,8 +232,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EFFECTDB_USERNAME"),
+                    Env.GetString("EFFECTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -305,8 +305,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EFFECTDB_USERNAME"),
+                    Env.GetString("EFFECTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())

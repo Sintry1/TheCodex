@@ -37,8 +37,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -50,14 +50,14 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"INSERT INTO Weapons (name, slot, type, effect, minimumDamage, maximumDamage) " +
+                            $"INSERT INTO Weapons (name, slot, type, effectId, minimumDamage, maximumDamage) " +
                             $"VALUES (@name, @slot, @type, @effect, @minimumDamage, @maximumDamage)";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
                         MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
                         MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effect", weapon.Effect);
+                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId);
                         MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
                         MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
 
@@ -111,8 +111,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -124,7 +124,7 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"UPDATE Weapons SET name = @name, slot = @slot, type = @type, effect = @effect, " +
+                            $"UPDATE Weapons SET name = @name, slot = @slot, type = @type, effectId = @effectId, " +
                             $"minimumDamage = @minimumDamage, maximumDamage = @maximumDamage WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
@@ -132,7 +132,7 @@ namespace WeaponDatabaseService
                         MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
                         MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
                         MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effect", weapon.Effect);
+                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId);
                         MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
                         MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
 
@@ -187,8 +187,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -248,8 +248,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -280,7 +280,7 @@ namespace WeaponDatabaseService
                                 Name = reader.GetString("name"),
                                 Slot = reader.GetString("slot"),
                                 Type = reader.GetString("type"),
-                                Effect = reader.GetString("effect"),
+                                EffectId = reader.GetInt32("effect"),
                                 MinimumDamage = reader.GetInt32("minimumDamage"),
                                 MaximumDamage = reader.GetInt32("maximumDamage")
                             };
@@ -324,8 +324,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -360,7 +360,7 @@ namespace WeaponDatabaseService
                             weapon.Name = reader.GetString("name");
                             weapon.Slot = reader.GetString("slot");
                             weapon.Type = reader.GetString("type");
-                            weapon.Effect = reader.GetString("effect");
+                            weapon.EffectId = reader.GetInt32("effect");
                             weapon.MinimumDamage = reader.GetInt32("minimumDamage");
                             weapon.MaximumDamage = reader.GetInt32("maximumDamage");
                         }
@@ -401,8 +401,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("EQUIPMENTDB_USERNAME"),
+                    Env.GetString("EQUIPMENTDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -439,7 +439,7 @@ namespace WeaponDatabaseService
                                 Name = reader.GetString("name"),
                                 Slot = reader.GetString("slot"),
                                 Type = reader.GetString("type"),
-                                Effect = reader.GetString("effect"),
+                                EffectId = reader.GetInt32("effect"),
                                 MinimumDamage = reader.GetInt32("minimumDamage"),
                                 MaximumDamage = reader.GetInt32("maximumDamage")
                             };

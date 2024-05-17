@@ -38,8 +38,8 @@ namespace AttacksDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("ATTACKSDB_USERNAME"),
+                    Env.GetString("ATTACKSDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -106,8 +106,8 @@ namespace AttacksDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("ATTACKSDB_USERNAME"),
+                    Env.GetString("ATTACKSDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -176,8 +176,8 @@ namespace AttacksDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("ATTACKSDB_USERNAME"),
+                    Env.GetString("ATTACKSDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -238,8 +238,8 @@ namespace AttacksDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("ATTACKSDB_USERNAME"),
+                    Env.GetString("ATTACKSDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -312,8 +312,8 @@ namespace AttacksDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("NAME"),
-                    Env.GetString("PASSWORD"));
+                    Env.GetString("ATTACKSDB_USERNAME"),
+                    Env.GetString("ATTACKSDB_PASSWORD"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
