@@ -9,11 +9,12 @@ namespace EffectsDatabaseService
 
         //abbreviation for EffectsDatabaseServices
         private EffectsDatabaseServices FDBS = new EffectsDatabaseServices();
+        private readonly IHub _sentryHub;
 
         //constructor for EffectsDatabaseController
-        public EffectsDatabaseController()
+        public EffectsDatabaseController(IHub sentryHub)
         {
-
+            _sentryHub = sentryHub;
         }
 
         //calls EffectsDatabaseServices.AddEffects() to add a effect to the database
@@ -21,6 +22,8 @@ namespace EffectsDatabaseService
         [HttpPost]
         public IActionResult CreateEffects(Effects effect)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateEffect");
+
             try
             {
                 bool result = FDBS.AddEffect(effect);
@@ -36,6 +39,9 @@ namespace EffectsDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -47,6 +53,8 @@ namespace EffectsDatabaseService
         [HttpPut]
         public IActionResult UpdateEffects(Effects effect)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateEffect");
+
             try
             {
                 bool result = FDBS.UpdateEffect(effect);
@@ -63,6 +71,9 @@ namespace EffectsDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -73,6 +84,8 @@ namespace EffectsDatabaseService
         [HttpDelete("{id}")]
         public IActionResult DeleteEffects(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteEffect");
+
             try
             {
                 bool result = FDBS.DeleteEffect(id);
@@ -88,6 +101,9 @@ namespace EffectsDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -98,6 +114,8 @@ namespace EffectsDatabaseService
         [HttpGet("{id}")]
         public IActionResult GetEffectsById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetEffectById");
+
             try
             {
                 Effects result = FDBS.GetEffectById(id);
@@ -110,6 +128,9 @@ namespace EffectsDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -120,6 +141,8 @@ namespace EffectsDatabaseService
         [HttpGet]
         public IActionResult GetAllEffectss()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllEffects");
+
             try
             {
                 List<Effects> result = FDBS.GetAllEffects();
@@ -138,6 +161,9 @@ namespace EffectsDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

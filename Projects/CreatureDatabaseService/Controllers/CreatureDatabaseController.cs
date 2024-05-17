@@ -10,11 +10,12 @@ namespace CreatureDatabaseService.Controllers
     {
 
         private CreatureDatabaseServices CDBS = new CreatureDatabaseServices();
+        private readonly IHub _sentryHub;
 
         // Constructor for CreatureDatabaseController
-        public CreatureDatabaseController()
+        public CreatureDatabaseController(IHub sentryHub)
         {
-            
+            _sentryHub = sentryHub;
         }
 
 
@@ -26,13 +27,24 @@ namespace CreatureDatabaseService.Controllers
         [HttpPost]
         public IActionResult CreateCreature([FromBody] Creature creature)
         {
-            if (CDBS.CreateCreature(creature))
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateCreature");
+            try {  
+                if (CDBS.CreateCreature(creature))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            } catch (Exception e)
             {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
+                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
+                //Return 500 if an error occurs
+                return StatusCode(500);
             }
         }
 
@@ -44,6 +56,8 @@ namespace CreatureDatabaseService.Controllers
         [HttpPut]
         public IActionResult UpdateCreature([FromBody] Creature creature)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateCreature");
+
             try
             {
                 if (CDBS.UpdateCreature(creature))
@@ -58,6 +72,9 @@ namespace CreatureDatabaseService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -71,6 +88,7 @@ namespace CreatureDatabaseService.Controllers
         [HttpDelete]
         public IActionResult DeleteCreature(string creatureName)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteCreature");
             try
             {
                 if (CDBS.DeleteCreature(creatureName))
@@ -85,6 +103,9 @@ namespace CreatureDatabaseService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -97,6 +118,7 @@ namespace CreatureDatabaseService.Controllers
         [HttpGet]
         public IActionResult GetAllCreatures()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllCreatures");
             try
             {
                 var creatures = CDBS.GetAllCreatures();
@@ -112,6 +134,9 @@ namespace CreatureDatabaseService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -125,6 +150,8 @@ namespace CreatureDatabaseService.Controllers
         [HttpGet("{creatureName}")]
         public IActionResult GetCreature(string creatureName)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreature");
+
             try
             {
                 var creature = CDBS.GetCreature(creatureName);
@@ -140,6 +167,9 @@ namespace CreatureDatabaseService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

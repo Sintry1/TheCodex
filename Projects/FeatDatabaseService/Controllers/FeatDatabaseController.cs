@@ -9,11 +9,12 @@ namespace FeatDatabaseService
 
         //abbreviation for FeatDatabaseServices
         private FeatDatabaseServices FDBS = new FeatDatabaseServices();
+        private readonly IHub _sentryHub;
 
         //constructor for FeatDatabaseController
-        public FeatDatabaseController()
+        public FeatDatabaseController(IHub sentryHub)
         {
-            
+            _sentryHub = sentryHub;
         }
 
         //calls FeatDatabaseServices.AddFeat() to add a Feat to the database
@@ -21,6 +22,7 @@ namespace FeatDatabaseService
         [HttpPost]
         public IActionResult CreateFeat(Feat Feat)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateFeat");
             try
             {
                 bool result = FDBS.CreateFeat(Feat);
@@ -35,6 +37,9 @@ namespace FeatDatabaseService
             } catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -46,6 +51,8 @@ namespace FeatDatabaseService
         [HttpPut]
         public IActionResult UpdateFeat(Feat Feat)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateFeat");
+
             try
             {
                 bool result = FDBS.UpdateFeat(Feat);
@@ -61,6 +68,9 @@ namespace FeatDatabaseService
             } catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -71,6 +81,8 @@ namespace FeatDatabaseService
         [HttpDelete("{id}")]
         public IActionResult DeleteFeat(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteFeat");
+
             try
             {
                 bool result = FDBS.DeleteFeat(id);
@@ -85,6 +97,9 @@ namespace FeatDatabaseService
             } catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -95,6 +110,8 @@ namespace FeatDatabaseService
         [HttpGet("{id}")]
         public IActionResult GetFeatById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetFeatById");
+
             try
             {
                 Feat result = FDBS.GetFeatById(id);
@@ -106,6 +123,9 @@ namespace FeatDatabaseService
             } catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -116,6 +136,7 @@ namespace FeatDatabaseService
         [HttpGet]
         public IActionResult GetAllFeats()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllFeats");
             try
             {
                 List<Feat> result = FDBS.GetAllFeats();
@@ -133,6 +154,9 @@ namespace FeatDatabaseService
             } catch(Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

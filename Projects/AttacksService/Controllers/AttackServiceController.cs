@@ -9,11 +9,12 @@ namespace AttacksService
 
         //abbreviation for EffectsDatabaseServices
         private AttackServices ADBS = new AttackServices();
+        private readonly IHub _sentryHub;
 
         //constructor for EffectsDatabaseController
-        public AttackController()
+        public AttackController(IHub sentryHub)
         {
-
+            _sentryHub = sentryHub;
         }
 
         //Calls AttackDatabaseServices.AddAttack() to add a attack to the database
@@ -23,6 +24,8 @@ namespace AttacksService
         [HttpPost]
         public async Task<IActionResult> CreateAttack(Attack attack)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateAttack");
+
             try
             {
                 bool result = await ADBS.AddAttack(attack);
@@ -38,6 +41,9 @@ namespace AttacksService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -51,6 +57,8 @@ namespace AttacksService
         [HttpPut]
         public async Task<IActionResult> UpdateAttack(Attack attack)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateAttack");
+
             try
             {
                 bool result = await ADBS.UpdateAttack(attack);
@@ -67,6 +75,9 @@ namespace AttacksService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -79,6 +90,8 @@ namespace AttacksService
         [HttpDelete]
         public async Task<IActionResult> DeleteAttack(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteAttack");
+
             try
             {
                 bool result = await ADBS.DeleteAttack(id);
@@ -95,6 +108,9 @@ namespace AttacksService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -107,6 +123,8 @@ namespace AttacksService
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAttackById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAttackById");
+
             try
             {
                 Attack attack = await ADBS.GetAttackById(id);
@@ -123,6 +141,9 @@ namespace AttacksService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -135,6 +156,7 @@ namespace AttacksService
         [HttpGet]
         public async Task<IActionResult> GetAttacks()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAttacks");
             try
             {
                 List<Attack> attacks = await ADBS.GetAllAttacks();
@@ -151,6 +173,9 @@ namespace AttacksService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

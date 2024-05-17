@@ -7,10 +7,12 @@ namespace WeaponDatabaseService
     public class WeaponDatabaseController : ControllerBase
     {
 
+        private readonly IHub _sentryHub;
         private WeaponDatabaseServices WDBS = new WeaponDatabaseServices();
-        public WeaponDatabaseController()
+
+        public WeaponDatabaseController(IHub sentryHub)
         {
-            
+            _sentryHub = sentryHub;
         }
 
         //calls WeaponDatabaseServices.AddWeapon() to add a weapon to the database
@@ -19,6 +21,7 @@ namespace WeaponDatabaseService
         [HttpPost]
         public IActionResult CreateWeapon(Weapon weapon)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
             {
                 bool result = WDBS.AddWeapon(weapon);
@@ -34,6 +37,9 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -46,6 +52,8 @@ namespace WeaponDatabaseService
         [HttpPut]
         public IActionResult UpdateWeapon(Weapon weapon)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateWeapon");
+
             try
             {
                 bool result = WDBS.UpdateWeapon(weapon);
@@ -62,6 +70,8 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -73,6 +83,8 @@ namespace WeaponDatabaseService
         [HttpDelete("{id}")]
         public IActionResult DeleteWeapon(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteWeapon");
+
             try
             {
                 bool result = WDBS.DeleteWeapon(id);
@@ -88,6 +100,9 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -99,6 +114,8 @@ namespace WeaponDatabaseService
         [HttpGet("{type}")]
         public IActionResult GetWeaponByType(string type)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponByType");
+
             try
             {
                 List<Weapon> weapon = WDBS.GetWeaponsByType(type);
@@ -114,6 +131,9 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -125,6 +145,8 @@ namespace WeaponDatabaseService
         [HttpGet]
         public IActionResult GetAllWeapons()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllWeapons");
+
             try
             {
                 List<Weapon> weapon = WDBS.GetAllWeapons();
@@ -140,6 +162,9 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -151,6 +176,8 @@ namespace WeaponDatabaseService
         [HttpGet("{id}")]
         public IActionResult GetWeaponById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponById");
+
             try
             {
                 Weapon weapon = WDBS.GetWeaponById(id);
@@ -166,6 +193,9 @@ namespace WeaponDatabaseService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

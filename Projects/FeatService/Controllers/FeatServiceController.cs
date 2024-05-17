@@ -8,11 +8,14 @@ namespace FeatService
     [Route("[controller]")]
     public class FeatServiceController : ControllerBase
     {
+
+        private readonly IHub _sentryHub;
         private FeatServices FS = new FeatServices();
 
         //Constructor for FeatServiceController
-        public FeatServiceController()
+        public FeatServiceController(IHub sentryHub)
         {
+            _sentryHub = sentryHub;
         }
 
         //Calls FeatServices.AddFeat() to add a feat to the database
@@ -22,6 +25,7 @@ namespace FeatService
         [HttpPost]
         public async Task<IActionResult> CreateFeat(Feat feat)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateFeat");
             try
             {
                 bool result = await FS.AddFeat(feat);
@@ -37,6 +41,9 @@ namespace FeatService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -49,6 +56,8 @@ namespace FeatService
         [HttpPut]
         public async Task<IActionResult> UpdateFeat(Feat feat)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateFeat");
+
             try
             {
                 bool result = await FS.UpdateFeat(feat);
@@ -65,6 +74,9 @@ namespace FeatService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -77,6 +89,8 @@ namespace FeatService
         [HttpDelete]
         public async Task<IActionResult> DeleteFeat(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteFeat");
+
             try
             {
                 bool result = await FS.DeleteFeat(id);
@@ -93,6 +107,9 @@ namespace FeatService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -105,6 +122,8 @@ namespace FeatService
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFeatById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetFeatById");
+
             try
             {
                 Feat result = await FS.GetFeatById(id);
@@ -121,6 +140,9 @@ namespace FeatService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -133,6 +155,8 @@ namespace FeatService
         [HttpGet]
         public async Task<IActionResult> GetAllFeats()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllFeats");
+
             try
             {
                 List<Feat> result = await FS.GetAllFeats();
@@ -149,6 +173,9 @@ namespace FeatService
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

@@ -6,10 +6,12 @@ namespace WeaponService.Controllers
     [Route("[controller]")]
     public class WeaponServiceController : ControllerBase
     {
-       private WeaponServices WS = new WeaponServices();
-        public WeaponServiceController()
+
+        private readonly IHub _sentryHub;
+        private WeaponServices WS = new WeaponServices();
+        public WeaponServiceController(IHub sentryHub)
         {
-            
+            _sentryHub = sentryHub;
         }
 
         //Calls WeaponServices.AddWeaponAsync() to add a weapon to the database
@@ -19,6 +21,7 @@ namespace WeaponService.Controllers
         [HttpPost]
         public async Task<IActionResult> AddWeaponAsync(Weapon weapon)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
             {
                 bool result = await WS.AddWeaponAsync(weapon);
@@ -33,7 +36,8 @@ namespace WeaponService.Controllers
             }
             catch (Exception e)
             {
-                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -46,6 +50,7 @@ namespace WeaponService.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateWeaponAsync(Weapon weapon)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateWeapon");
             try
             {
                 bool result = await WS.UpdateWeaponAsync(weapon);
@@ -60,7 +65,8 @@ namespace WeaponService.Controllers
             }
             catch (Exception e)
             {
-                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -73,6 +79,7 @@ namespace WeaponService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWeaponAsync(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteWeapon");
             try
             {
                 bool result = await WS.DeleteWeaponAsync(id);
@@ -87,7 +94,8 @@ namespace WeaponService.Controllers
             }
             catch (Exception e)
             {
-                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -100,6 +108,8 @@ namespace WeaponService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWeaponsAsync()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeapons");
+
             try
             {
                 var weapons = await WS.GetWeaponsAsync();
@@ -115,6 +125,9 @@ namespace WeaponService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -127,6 +140,8 @@ namespace WeaponService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWeaponByIdAsync(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponById");
+
             try
             {
                 var weapon = await WS.GetWeaponByIdAsync(id);
@@ -142,6 +157,9 @@ namespace WeaponService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -152,8 +170,9 @@ namespace WeaponService.Controllers
         //returns 500 if an error occurs
         //runs asynchronously
         [HttpGet("{type}")]
-            public async Task<IActionResult> GetWeaponByTypeAsync(string type)
+        public async Task<IActionResult> GetWeaponByTypeAsync(string type)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponByType");
             try
             {
                 List<Weapon> weapon = await WS.GetWeaponsByTypeAsync(type);
@@ -169,6 +188,8 @@ namespace WeaponService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }

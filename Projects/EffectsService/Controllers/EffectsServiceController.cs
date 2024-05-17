@@ -9,10 +9,12 @@ namespace EffectsService.Controllers
 	{
 
         private EffectsServices ES = new EffectsServices();
+        private readonly IHub _sentryHub;
 
         //Constructor for EffectsServiceController
-        public EffectsServiceController()
+        public EffectsServiceController(IHub sentryHub)
 		{
+            _sentryHub = sentryHub;
         }
 
         //Calls EffectsServices.CreateEffect() to add an effect to the database
@@ -22,6 +24,8 @@ namespace EffectsService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEffect(Effects effect)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("CreateEffect");
+
             try
             {
                 bool result = await ES.AddEffect(effect);
@@ -37,6 +41,9 @@ namespace EffectsService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -49,6 +56,8 @@ namespace EffectsService.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateEffect(Effects effect)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateEffect");
+
             try
             {
                 bool result = await ES.UpdateEffect(effect);
@@ -65,6 +74,9 @@ namespace EffectsService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -76,6 +88,8 @@ namespace EffectsService.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteEffect(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteEffect");
+
             try
             {
                 bool result = await ES.DeleteEffect(id);
@@ -92,6 +106,9 @@ namespace EffectsService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -104,6 +121,8 @@ namespace EffectsService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEffectById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetEffectById");
+
             try
             {
                 Effects result = await ES.GetEffectById(id);
@@ -119,6 +138,9 @@ namespace EffectsService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
@@ -131,6 +153,8 @@ namespace EffectsService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllEffects()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllEffects");
+
             try
             {
                 List<Effects> result = await ES.GetAllEffects();
@@ -146,6 +170,9 @@ namespace EffectsService.Controllers
             catch (Exception e)
             {
                 //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
                 //Return 500 if an error occurs
                 return StatusCode(500);
             }
