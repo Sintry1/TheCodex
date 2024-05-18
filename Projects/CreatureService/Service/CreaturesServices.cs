@@ -16,6 +16,7 @@ namespace CreatureService
 
         public CreatureServices()
         {
+            _client = new HttpClient();
         }
 
         // Create a new creature entry
