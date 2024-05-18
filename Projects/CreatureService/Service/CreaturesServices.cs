@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using Polly;
+using Resilience;
 
 namespace CreatureService
 {
@@ -10,6 +12,7 @@ namespace CreatureService
 
         private readonly HttpClient _client;
         private readonly string uri = "http://localhost:5030";
+        private readonly AsyncPolicy<HttpResponseMessage> _policy = PollyPolicies.GetRetryAndCircuitBreakerPolicy();
 
         public CreatureServices()
         {
@@ -36,7 +39,7 @@ namespace CreatureService
                     "application/json");
 
                 // Make a POST request to the CreatureDatabaseService to create a new creature entry
-                var response = await _client.PostAsync(uri + "/CreatureDatabase", dataJson);
+                var response = await _policy.ExecuteAsync(() => _client.PostAsync(uri + "/CreatureDatabase", dataJson));
 
                 // Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -69,7 +72,7 @@ namespace CreatureService
                     "application/json");
 
                 // Make a PUT request to the CreatureDatabaseService to update an existing creature entry
-                var response = await _client.PutAsync(uri + "/CreatureDatabase", dataJson);
+                var response = await _policy.ExecuteAsync(() => _client.PutAsync(uri + "/CreatureDatabase", dataJson));
 
                 // Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -93,7 +96,7 @@ namespace CreatureService
             try
             {
                 // Make a DELETE request to the CreatureDatabaseService to delete a creature entry
-                var response = await _client.DeleteAsync(uri + "/CreatureDatabase?creatureName=" + creatureName);
+                var response = await _policy.ExecuteAsync(() => _client.DeleteAsync(uri + "/CreatureDatabase?creatureName=" + creatureName));
 
                 // Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -116,7 +119,7 @@ namespace CreatureService
             try
             {
                 // Make a GET request to the CreatureDatabaseService to get a creature entry
-                var response = await _client.GetAsync(uri + "/CreatureDatabase?creatureName=" + creatureName);
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(uri + "/CreatureDatabase?creatureName=" + creatureName));
 
                 // Returns the creature object if the response is successful, null if not
                 if (response.IsSuccessStatusCode)
@@ -147,7 +150,7 @@ namespace CreatureService
             try
             {
                 // Make a GET request to the CreatureDatabaseService to get all creatures
-                var response = await _client.GetAsync(uri + "/CreatureDatabase");
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(uri + "/CreatureDatabase"));
 
                 // Returns the list of creatures if the response is successful, null if not
                 if (response.IsSuccessStatusCode)

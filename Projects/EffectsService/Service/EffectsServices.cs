@@ -2,14 +2,17 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using Polly;
+using Resilience;
 
 namespace EffectsService
 {
     public class EffectsServices
     {
-        private readonly HttpClient _client;
-        private string uri = "http://localhost:5231/";
-        
+        private readonly HttpClient _client = new HttpClient();
+        private readonly string _uri = "http://localhost:5231/";
+        private readonly AsyncPolicy<HttpResponseMessage> _policy = Resilience.PollyPolicies.GetRetryAndCircuitBreakerPolicy();
+
         //constructor for EffectsServices
         public EffectsServices()
         {
@@ -35,7 +38,7 @@ namespace EffectsService
                     );
 
                 //Makes a POST request to the EffectsDatabaseController to add an effect to the database
-                var response = await _client.PostAsync(uri + "EffectsDatabase", dataJson);
+                var response = await _policy.ExecuteAsync(() => _client.PostAsync(_uri + "EffectsDatabase", dataJson));
 
                 //Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -67,7 +70,7 @@ namespace EffectsService
                     );
 
                 //Makes a PUT request to the EffectsDatabaseController to update an effect in the database
-                var response = await _client.PutAsync(uri + "EffectsDatabase", dataJson);
+                var response = await _policy.ExecuteAsync(() => _client.PutAsync(_uri + "EffectsDatabase", dataJson));
 
                 //Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -89,7 +92,7 @@ namespace EffectsService
             try
             {
                 //Makes a DELETE request to the EffectsDatabaseController to delete an effect from the database
-                var response = await _client.DeleteAsync(uri + "EffectsDatabase/" + id);
+                var response = await _policy.ExecuteAsync(() => _client.DeleteAsync(_uri + "EffectsDatabase/" + id));
 
                 //Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -111,7 +114,7 @@ namespace EffectsService
             try
             {
                 //Makes a GET request to the EffectsDatabaseController to get an effect by id from the database
-                var response = await _client.GetAsync(uri + "EffectsDatabase/" + id);
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(_uri + "EffectsDatabase/" + id));
 
                 //Returns the effect object if the response is successful, null if not
                 if (response.IsSuccessStatusCode)
@@ -140,7 +143,7 @@ namespace EffectsService
             try
             {
                 //Makes a GET request to the EffectsDatabaseController to get all effects from the database
-                var response = await _client.GetAsync(uri + "EffectsDatabase");
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(_uri + "EffectsDatabase"));
 
                 //Returns the list of effect objects if the response is successful, null if not
                 if (response.IsSuccessStatusCode)
