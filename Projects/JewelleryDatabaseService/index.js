@@ -1,5 +1,5 @@
 const axios = require('axios');
-const PORT = 3006;
+const PORT = 3004;
 const express = require('express');
 const app = express();
 
