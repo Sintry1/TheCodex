@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeaponDatabaService", "Weap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeaponService", "WeaponService\WeaponService.csproj", "{CBBCC8C9-7DDC-4073-A3F5-88403004D666}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resilience", "..\Package\Resilience\Resilience.csproj", "{02797E70-129C-49B6-9C4D-AB27593BB6F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{CBBCC8C9-7DDC-4073-A3F5-88403004D666}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBBCC8C9-7DDC-4073-A3F5-88403004D666}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBBCC8C9-7DDC-4073-A3F5-88403004D666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02797E70-129C-49B6-9C4D-AB27593BB6F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02797E70-129C-49B6-9C4D-AB27593BB6F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02797E70-129C-49B6-9C4D-AB27593BB6F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02797E70-129C-49B6-9C4D-AB27593BB6F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
