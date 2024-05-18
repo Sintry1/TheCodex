@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttacksDatabaseService", "AttacksDatabaseService\AttacksDatabaseService.csproj", "{1877BAD7-FC7F-4B1E-B609-D4DA57900260}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttacksService", "AttacksService\AttacksService.csproj", "{6C49C201-3887-43D2-B367-59204961A486}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreatureDatabaseService", "CreatureDatabaseService\CreatureDatabaseService.csproj", "{B6CAA145-E858-423A-B3BA-BB8AD90E01A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreatureService", "CreatureService\CreatureService.csproj", "{9ED98251-6115-4E72-8E03-4AD798D23F2F}"
@@ -15,15 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectsDatabaseService", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectsService", "EffectsService\EffectsService.csproj", "{5B593015-5DA5-49AB-92E8-19B6BAFADAA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatDatabaseService", "FeatDatabaseService\FeatDatabaseService.csproj", "{35663359-F851-4A0B-AEA2-FD11DE5FCE8F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatService", "FeatService\FeatService.csproj", "{F6F5CFD5-7D36-4EFE-803E-8F1379A4FA29}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeaponDatabaService", "WeaponDatabaseService\WeaponDatabaService.csproj", "{56F5C3F9-6A60-4635-AAD1-AD8A690F91BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeaponService", "WeaponService\WeaponService.csproj", "{CBBCC8C9-7DDC-4073-A3F5-88403004D666}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resilience", "..\Package\Resilience\Resilience.csproj", "{02797E70-129C-49B6-9C4D-AB27593BB6F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resilience", "..\Package\Resilience\Resilience.csproj", "{02797E70-129C-49B6-9C4D-AB27593BB6F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1877BAD7-FC7F-4B1E-B609-D4DA57900260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1877BAD7-FC7F-4B1E-B609-D4DA57900260}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1877BAD7-FC7F-4B1E-B609-D4DA57900260}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1877BAD7-FC7F-4B1E-B609-D4DA57900260}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C49C201-3887-43D2-B367-59204961A486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C49C201-3887-43D2-B367-59204961A486}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C49C201-3887-43D2-B367-59204961A486}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C49C201-3887-43D2-B367-59204961A486}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B6CAA145-E858-423A-B3BA-BB8AD90E01A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B6CAA145-E858-423A-B3BA-BB8AD90E01A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6CAA145-E858-423A-B3BA-BB8AD90E01A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,14 +39,6 @@ Global
 		{5B593015-5DA5-49AB-92E8-19B6BAFADAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B593015-5DA5-49AB-92E8-19B6BAFADAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B593015-5DA5-49AB-92E8-19B6BAFADAA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35663359-F851-4A0B-AEA2-FD11DE5FCE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35663359-F851-4A0B-AEA2-FD11DE5FCE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35663359-F851-4A0B-AEA2-FD11DE5FCE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35663359-F851-4A0B-AEA2-FD11DE5FCE8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6F5CFD5-7D36-4EFE-803E-8F1379A4FA29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6F5CFD5-7D36-4EFE-803E-8F1379A4FA29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6F5CFD5-7D36-4EFE-803E-8F1379A4FA29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6F5CFD5-7D36-4EFE-803E-8F1379A4FA29}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56F5C3F9-6A60-4635-AAD1-AD8A690F91BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56F5C3F9-6A60-4635-AAD1-AD8A690F91BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F5C3F9-6A60-4635-AAD1-AD8A690F91BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
