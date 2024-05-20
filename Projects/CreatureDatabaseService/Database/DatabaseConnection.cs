@@ -24,13 +24,20 @@ namespace CreatureDatabaseService
         // Set the connection credentials dynamically
         public void SetConnectionCredentials(string username, string password, string dbHost, string dbName)
         {
-            connectionString = $"mongodb://{username}:{password}@{dbHost}/?retryWrites=true&w=majority&{dbName}";
+            // Create the connection string
+            connectionString = $"mongodb+srv://{username}:{password}@{dbHost}/?retryWrites=true&w=majority&{dbName}";
+            
+            // Create the client and database
             client = new MongoClient(connectionString);
+            
+            // Get the database
             database = client.GetDatabase(databaseName);
         }
 
+        // Get the database
         public IMongoDatabase GetDatabase()
         {
+            // Return the database
             return database;
         }
 

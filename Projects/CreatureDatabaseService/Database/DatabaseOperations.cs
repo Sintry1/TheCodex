@@ -24,6 +24,7 @@ namespace CreatureDatabaseService
         {
             try
             {
+                // Insert the creature object into the database
                 _creaturesCollection.InsertOne(creature);
                 Console.WriteLine("Creature inserted successfully.");
                 return true;
@@ -43,9 +44,12 @@ namespace CreatureDatabaseService
         {
             try
             {
+                // Find the creature in the database and replace it with the updated creature
                 var filter = Builders<Creature>.Filter.Eq(c => c.Name, updatedCreature.Name);
+                // Replace the creature with the updated creature
                 var result = _creaturesCollection.ReplaceOne(filter, updatedCreature);
 
+                // Check if the creature was updated
                 if (result.ModifiedCount > 0)
                 {
                     Console.WriteLine("Creature updated successfully.");
@@ -68,7 +72,10 @@ namespace CreatureDatabaseService
         // Returns true if successful, false if not
         public bool DeleteCreature(string name)
         {
+            // Find the creature in the database and delete it
             var filter = Builders<Creature>.Filter.Eq(c => c.Name, name);
+            
+            // Delete the creature
             var result = _creaturesCollection.DeleteOne(filter);
 
             if (result.DeletedCount > 0)
@@ -87,6 +94,8 @@ namespace CreatureDatabaseService
         // Returns a list of all creatures
         public List<Creature> ReadAllCreatures()
         {
+
+            // Find all creatures in the database
             try
             {
                 return _creaturesCollection.Find(new BsonDocument()).ToList();
@@ -106,7 +115,10 @@ namespace CreatureDatabaseService
         {
             try
             {
+                // Find the creature in the database
                 var filter = Builders<Creature>.Filter.Eq(c => c.Name, name);
+                
+                // Return the creature
                 return _creaturesCollection.Find(filter).FirstOrDefault();
             }
             catch (Exception e)
