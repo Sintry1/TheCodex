@@ -5,10 +5,6 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{6C6407A0-0AEA-4664-8083-169E1D795A4C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttacksDatabaseService", "Projects\AttacksDatabaseService\AttacksDatabaseService.csproj", "{A7658584-8C2D-4CD4-82F7-5996453DA894}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttacksService", "Projects\AttacksService\AttacksService.csproj", "{01EF8833-B653-405A-8B51-2159D68BFC62}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreatureDatabaseService", "Projects\CreatureDatabaseService\CreatureDatabaseService.csproj", "{6A022430-6E95-44E8-911F-1DF39F48758D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreatureService", "Projects\CreatureService\CreatureService.csproj", "{97FA169D-E986-402B-ACCB-778C7A516209}"
@@ -16,10 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectsDatabaseService", "Projects\EffectsDatabaseService\EffectsDatabaseService.csproj", "{C931E24E-1632-437D-B444-7712C7A47EC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectsService", "Projects\EffectsService\EffectsService.csproj", "{B914F4A0-9C31-4D29-A4D5-D85A34F56811}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatDatabaseService", "Projects\FeatDatabaseService\FeatDatabaseService.csproj", "{4B091391-F6F6-46DA-838B-3CFB173D58FB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatService", "Projects\FeatService\FeatService.csproj", "{ED52DF01-E123-4421-9756-365C51581F3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeaponDatabaService", "Projects\WeaponDatabaseService\WeaponDatabaService.csproj", "{CD42FC5E-4684-4F99-A86D-69F4F37779AB}"
 EndProject

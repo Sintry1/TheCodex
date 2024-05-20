@@ -3,7 +3,7 @@ interface IArmour {
     name: string;
     slot: string;
     type: string;
-    effect: string;
+    effect?: string;
 }
 
 class Armour implements IArmour {
@@ -11,7 +11,7 @@ class Armour implements IArmour {
     name: string;
     slot: string;
     type: string;
-    effect: string;
+    effect?: string;
 
     constructor(id: number, name: string, slot: string, type: string, effect: string) {
         this.id = id;
@@ -22,4 +22,4 @@ class Armour implements IArmour {
     }
 }
 
-export default Armour;
+module.exports = Armour;
