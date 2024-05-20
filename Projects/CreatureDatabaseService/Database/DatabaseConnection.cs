@@ -17,20 +17,27 @@ namespace CreatureDatabaseService
             string username = Env.GetString("DB_USER");
             string password = Env.GetString("DB_PASS");
             string dbHost = Env.GetString("DB_HOST");
-            string dbPort = Env.GetString("DB_PORT");
-            SetConnectionCredentials(username, password, dbHost, dbPort);
+            string dbName = Env.GetString("DB_NAME");
+            SetConnectionCredentials(username, password, dbHost, dbName);
         }
 
         // Set the connection credentials dynamically
-        public void SetConnectionCredentials(string username, string password, string dbHost, string dbPort)
+        public void SetConnectionCredentials(string username, string password, string dbHost, string dbName)
         {
-            connectionString = $"mongodb://{username}:{password}@{dbHost}:{dbPort}";
+            // Create the connection string
+            connectionString = $"mongodb+srv://{username}:{password}@{dbHost}/?retryWrites=true&w=majority&{dbName}";
+            
+            // Create the client and database
             client = new MongoClient(connectionString);
+            
+            // Get the database
             database = client.GetDatabase(databaseName);
         }
 
+        // Get the database
         public IMongoDatabase GetDatabase()
         {
+            // Return the database
             return database;
         }
 
