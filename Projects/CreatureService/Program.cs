@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 // Add Sentry
 builder.Logging.AddSentry(o =>
 {
-    o.Dsn = ""; //Add url here
+    o.Dsn = "https://3148ff56b0e94e37a61069aa9e998362@o4506960048881664.ingest.us.sentry.io/4507288528748544"; //Add url here
     o.Debug = true;
     o.TracesSampleRate = 1.0;
     o.ProfilesSampleRate = 1.0;
