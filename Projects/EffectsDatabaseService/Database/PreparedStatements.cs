@@ -293,7 +293,7 @@ namespace EffectsDatabaseService
             }
         }
 
-        //method for getting all effects
+        //method for getting all Effects
         //This method takes no parameters
         //It returns a list of effect objects
         //This method uses prepared statements to prevent SQL injection
@@ -317,7 +317,7 @@ namespace EffectsDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Effects";
+                        command.CommandText = "SELECT * FROM effects";
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
