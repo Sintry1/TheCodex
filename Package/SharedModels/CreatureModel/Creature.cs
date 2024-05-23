@@ -7,7 +7,7 @@ namespace CreatureModel
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
+        public string? _id { get; set; }
         public string Name { get; set; }
         public float ChallengeRating { get; set; }
         public string Attacks { get; set; }
