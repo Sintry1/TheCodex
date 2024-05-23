@@ -37,8 +37,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -111,8 +111,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -187,8 +187,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -248,8 +248,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -324,8 +324,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -401,8 +401,8 @@ namespace WeaponDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EQUIPMENTDB_USERNAME"),
-                    Env.GetString("EQUIPMENTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())

@@ -3,7 +3,7 @@ const axios = require("axios");
 const create = async ({ name, slot, type, effect }) => {
   try {
     const response = await axios.post(
-      "http://localhost:3002/armour/create",
+      "http://localhost:3002/armourDatabase/create",
       { name, slot, type, effect }
     );
     console.log(response.data);
@@ -15,7 +15,7 @@ const create = async ({ name, slot, type, effect }) => {
 
 const getAll = async () => {
   try {
-    const response = await axios.get("http://localhost:3002/armour/");
+    const response = await axios.get("http://localhost:3002/armourDatabase/");
     console.log(response.data);
     return response.data;
   } catch (e) {
@@ -26,7 +26,7 @@ const getAll = async () => {
 const getById = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:3002/armour/${id}`
+      `http://localhost:3002/armourDatabase/${id}`
     );
     console.log(response.data);
     return response.data;
@@ -38,7 +38,7 @@ const getById = async (id) => {
 const update = async (id, { name, slot, type, effect }) => {
   try {
     const response = await axios.put(
-      `http://localhost:3002/armour/${id}`,
+      `http://localhost:3002/armourDatabase/${id}`,
       { name, slot, type, effect }
     );
     console.log(response.data);
@@ -51,7 +51,7 @@ const update = async (id, { name, slot, type, effect }) => {
 const deleteArmour = async (id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:3002/armour/${id}`
+      `http://localhost:3002/armourDatabase/${id}`
     );
     console.log(response.data);
     return response.data;

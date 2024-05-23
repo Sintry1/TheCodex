@@ -29,133 +29,136 @@ namespace EffectsDatabaseService
         //It returns a boolean value, true if the effect was created successfully and false if it was not
         //This method uses prepared statements to prevent SQL injection
         public bool InsertEffect(Effects effect)
-        {
-            DotNetEnv.Env.Load();
+{
+    DotNetEnv.Env.Load();
 
-            try
-            {
-                // Set credentials for the user needed
-                dbConnection.SetConnectionCredentials(
-                    Env.GetString("EFFECTDB_USERNAME"),
-                    Env.GetString("EFFECTDB_PASSWORD"));
+    try
+    {
+        // Set credentials for the user needed
+        dbConnection.SetConnectionCredentials(
+            Env.GetString("DB_USER"),
+            Env.GetString("DB_PASS"));
 
-                // Use mySqlConnection to open the connection and throw an exception if it fails
-                using (MySqlConnection connection = dbConnection.OpenConnection())
-                {
-                    try
-                    {
-                        // Create an instance of MySqlCommand
-                        MySqlCommand command = new MySqlCommand(null, connection);
+        // Use mySqlConnection to open the connection and throw an exception if it fails
+        using (MySqlConnection connection = dbConnection.OpenConnection())
+{
+    try
+    {
+        // Create an instance of MySqlCommand
+        MySqlCommand command = new MySqlCommand(null, connection);
 
-                        // Create and prepare an SQL statement.
-                        command.CommandText =
-                            $"INSERT INTO effects (name, description) " +
-                            $"VALUES (@name, @description)";
+        // Create and prepare an SQL statement.
+        command.CommandText =
+            $"INSERT INTO effects (name, description) " +
+            $"VALUES (@name, @description)";
 
-                        // Sets mySQL parameters for the prepared statement
-                        MySqlParameter nameParam = new MySqlParameter("name", effect.Name);
-                        MySqlParameter descriptionParam = new MySqlParameter("description", effect.Description);
+        // Sets mySQL parameters for the prepared statement
+        MySqlParameter nameParam = new MySqlParameter("name", effect.Name);
+        MySqlParameter descriptionParam = new MySqlParameter("description", effect.Description ?? (object)DBNull.Value);
 
-                        // Adds the parameters to the command
-                        command.Parameters.Add(nameParam);
-                        command.Parameters.Add(descriptionParam);
+        // Adds the parameters to the command
+        command.Parameters.Add(nameParam);
+        command.Parameters.Add(descriptionParam);
 
-                        // Call Prepare after setting the Commandtext and Parameters.
-                        command.Prepare();
+        // Call Prepare after setting the Commandtext and Parameters.
+                command.Prepare();
 
-                        // Execute the query
-                        object result = command.ExecuteScalar();
+                // Execute the query
+                object result = command.ExecuteScalar();
 
-                        // Return true if no exceptions are thrown
-                        return true;
-                    }
-                    catch (MySqlException ex)
-                    {
-                        // Handle the exception (e.g., log it) and return false
-                        Console.WriteLine($"Error executing query: {ex.Message}");
-                        return false;
-                    }
-                    finally
-                    {
-                        // Close the connection at the end
-                        dbConnection.CloseConnection();
-                        Console.WriteLine("Connection closed.");
-                    }
-                }
+                // Return true if no exceptions are thrown
+                return true;
             }
-            catch (Exception)
+            catch (MySqlException ex)
             {
+                // Handle the exception (e.g., log it) and return false
+                Console.WriteLine($"Error executing query: {ex.Message}");
                 return false;
             }
+            finally
+            {
+                // Close the connection at the end
+                dbConnection.CloseConnection();
+                Console.WriteLine("Connection closed.");
+            }
         }
+    }
+    catch (Exception)
+    {
+        return false;
+    }
+}
 
         //method for updating a effect in the database
         //This method takes a effect object as a parameter
         //It returns a boolean value, true if the effect was updated successfully and false if it was not
         //This method uses prepared statements to prevent SQL injection
         public bool UpdateEffect(Effects effect)
-        {
-            DotNetEnv.Env.Load();
+{
+    DotNetEnv.Env.Load();
 
+    try
+    {
+        // Set credentials for the user needed
+        dbConnection.SetConnectionCredentials(
+            Env.GetString("DB_USER"),
+            Env.GetString("DB_PASS"));
+
+        // Use mySqlConnection to open the connection and throw an exception if it fails
+        using (MySqlConnection connection = dbConnection.OpenConnection())
+        {
             try
             {
-                // Set credentials for the user needed
-                dbConnection.SetConnectionCredentials(
-                    Env.GetString("EFFECTDB_USERNAME"),
-                    Env.GetString("EFFECTDB_PASSWORD"));
+                // Create an instance of MySqlCommand
+                MySqlCommand command = new MySqlCommand(null, connection);
 
-                // Use mySqlConnection to open the connection and throw an exception if it fails
-                using (MySqlConnection connection = dbConnection.OpenConnection())
+                // Create and prepare an SQL statement.
+                string commandText = "UPDATE effects SET ";
+                if (effect.Name != null)
                 {
-                    try
-                    {
-                        // Create an instance of MySqlCommand
-                        MySqlCommand command = new MySqlCommand(null, connection);
-
-                        // Create and prepare an SQL statement.
-                        command.CommandText =
-                            $"UPDATE effects " +
-                            $"SET name = @name, description = @description " +
-                            $"WHERE id = @id";
-
-                        // Sets mySQL parameters for the prepared statement
-                        MySqlParameter nameParam = new MySqlParameter("name", effect.Name);
-                        MySqlParameter descriptionParam = new MySqlParameter("description", effect.Description);
-                        MySqlParameter idParam = new MySqlParameter("id", effect.Id);
-
-                        // Adds the parameters to the command
-                        command.Parameters.Add(nameParam);
-                        command.Parameters.Add(descriptionParam);
-                        command.Parameters.Add(idParam);
-
-                        // Call Prepare after setting the Commandtext and Parameters.
-                        command.Prepare();
-
-                        // Execute the query
-                        object result = command.ExecuteScalar();
-
-                        // Return true if no exceptions are thrown
-                        return true;
-                    }
-                    catch (MySqlException ex)
-                    {
-                        // Handle the exception (e.g., log it) and return false
-                        Console.WriteLine($"Error executing query: {ex.Message}");
-                        return false;
-                    }
-                    finally
-                    {
-                        // Close the connection at the end
-                        dbConnection.CloseConnection();
-                        Console.WriteLine("Connection closed.");
-                    }
+                    commandText += "name = @name, ";
+                    command.Parameters.AddWithValue("@name", effect.Name);
                 }
+                if (effect.Description != null)
+                {
+                    commandText += "description = @description, ";
+                    command.Parameters.AddWithValue("@description", effect.Description);
+                }
+                commandText = commandText.TrimEnd(',', ' ') + " WHERE id = @id";
+                command.CommandText = commandText;
+
+                // Sets mySQL parameters for the prepared statement
+                MySqlParameter idParam = new MySqlParameter("@id", effect.Id);
+                command.Parameters.Add(idParam);
+
+                // Call Prepare after setting the Commandtext and Parameters.
+                command.Prepare();
+
+                // Execute the query
+                object result = command.ExecuteScalar();
+
+                // Return true if no exceptions are thrown
+                return true;
             }
-            catch (Exception)
+            catch (MySqlException ex)
             {
+                // Handle the exception (e.g., log it) and return false
+                Console.WriteLine($"Error executing query: {ex.Message}");
                 return false;
             }
+            finally
+            {
+                // Close the connection at the end
+                dbConnection.CloseConnection();
+                Console.WriteLine("Connection closed.");
+            }
         }
+    }
+    catch (Exception)
+    {
+        return false;
+    }
+}
 
         //method for deleting a effect in the database
         //This method takes a effect object as a parameter
@@ -169,8 +172,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EFFECTDB_USERNAME"),
-                    Env.GetString("EFFECTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -232,8 +235,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EFFECTDB_USERNAME"),
-                    Env.GetString("EFFECTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
@@ -305,8 +308,8 @@ namespace EffectsDatabaseService
             {
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
-                    Env.GetString("EFFECTDB_USERNAME"),
-                    Env.GetString("EFFECTDB_PASSWORD"));
+                    Env.GetString("DB_USER"),
+                    Env.GetString("DB_PASS"));
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())

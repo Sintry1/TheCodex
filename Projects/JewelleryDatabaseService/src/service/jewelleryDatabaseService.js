@@ -1,16 +1,17 @@
 const db = require("../infra/connection");
 
 
-const create = async ({name, type, effect}) => {
-  try {
-    const result = await db.query(
-      `INSERT INTO jewellery (name, type, effect) VALUES ('${name}', '${type}', '${effect}')`
-    );
-    return result;
-  } catch (e) {
-    console.log(e);
-  }
-};
+const create = async ({ name, type, effect }) => {
+    try {
+      const effectValue = effect == null ? "NULL" : `'${effect}'`;
+      const result = await db.query(
+        `INSERT INTO jewellery (name, type, effect) VALUES ('${name}', '${type}', ${effectValue})`
+      );
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 const getAll = async () => {
     try {
@@ -30,30 +31,36 @@ const getById = async (id) => {
     }
 };
 
-const update = async (id, name, type, effect) => {
+const update = async (id, { name, type, effect }) => {
     try {
-        const result = await db.query(
-            `UPDATE jewellery SET name = '${name}', type = '${type}', effect = '${effect}' WHERE id = ${id}`
-        );
-        return result;
+      let query = 'UPDATE jewellery SET ';
+      if (name !== undefined) query += `name = '${name}', `;
+      if (type !== undefined) query += `type = '${type}', `;
+      if (effect !== undefined) {
+        const effectValue = effect == null ? "NULL" : `'${effect}'`;
+        query += `effect = ${effectValue}, `;
+      }
+      query = query.slice(0, -2) + ` WHERE id = ${id}`;
+      const result = await db.query(query);
+      return result;
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-};
+  };
 
-const deleteArmour = async (id) => {
+  const deleteJewellery = async (id) => {
     try {
-        const result = await db.query(`DELETE FROM jewellery WHERE id = ${id}`);
-        return result;
+      const result = await db.query(`DELETE FROM jewellery WHERE id = ${id}`);
+      return result;
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-};
+  }
 
 module.exports = {
     create,
     getAll,
     getById,
     update,
-    deleteArmour
+    deleteJewellery
 }

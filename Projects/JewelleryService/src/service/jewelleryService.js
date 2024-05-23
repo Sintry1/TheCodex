@@ -1,10 +1,10 @@
 const axios = require("axios");
 
-const create = async ({ name, slot, type, effect }) => {
+const create = async ({ name, type, effect }) => {
   try {
     const response = await axios.post(
-      "http://localhost:3004/jewellery/create",
-      { name, slot, type, effect }
+      "http://localhost:3004/jewelleryDatabase/create",
+      { name, type, effect }
     );
     console.log(response.data);
     return response.data;
@@ -15,7 +15,7 @@ const create = async ({ name, slot, type, effect }) => {
 
 const getAll = async () => {
   try {
-    const response = await axios.get("http://localhost:3004/jewellery/");
+    const response = await axios.get("http://localhost:3004/jewelleryDatabase/");
     console.log(response.data);
     return response.data;
   } catch (e) {
@@ -26,7 +26,7 @@ const getAll = async () => {
 const getById = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:3004/jewellery/${id}`
+      `http://localhost:3004/jewelleryDatabase/${id}`
     );
     console.log(response.data);
     return response.data;
@@ -35,11 +35,11 @@ const getById = async (id) => {
   }
 };
 
-const update = async (id, { name, slot, type, effect }) => {
+const update = async (id, { name, type, effect }) => {
   try {
     const response = await axios.put(
-      `http://localhost:3004/jewellery/${id}`,
-      { name, slot, type, effect }
+      `http://localhost:3004/jewelleryDatabase/${id}`,
+      { name, type, effect }
     );
     console.log(response.data);
     return response.data;
@@ -51,7 +51,7 @@ const update = async (id, { name, slot, type, effect }) => {
 const deleteArmour = async (id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:3004/jewellery/${id}`
+      `http://localhost:3004/jewelleryDatabase/${id}`
     );
     console.log(response.data);
     return response.data;

@@ -10,7 +10,7 @@ Sentry.init({
     dsn: 'https://34d73dc0fc0fb04f1c44b8ec758fce46@o4506960048881664.ingest.us.sentry.io/4507298954346496',
     integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
-        new Tracing.Integrations.Express({ app: express }),
+        new Tracing.Integrations.Express({ app }),
     ],
     tracesSampleRate: 1.0,
 });

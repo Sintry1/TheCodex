@@ -22,7 +22,7 @@ namespace EffectsService.Controllers
         //returns 500 if an error occurs
         //Runs asynchronously
         [HttpPost]
-        public async Task<IActionResult> CreateEffect(Effects effect)
+        public async Task<IActionResult> CreateEffect([FromBody] Effects effect)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("CreateEffect");
 
