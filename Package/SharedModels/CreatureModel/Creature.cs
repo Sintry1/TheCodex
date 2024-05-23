@@ -1,5 +1,4 @@
-
-namespace CreatureDatabaseService
+﻿namespace CreatureModel
 {
     public class Creature
     {
@@ -17,7 +16,7 @@ namespace CreatureDatabaseService
         public int HP { get; set; }
         public int AC { get; set; }
         public int Speed { get; set; }
-        
+
 
     }
 }

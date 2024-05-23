@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WeaponModel;
 
 namespace WeaponService.Controllers
 {
@@ -24,6 +25,7 @@ namespace WeaponService.Controllers
             var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
             {
+                
                 bool result = await WS.AddWeaponAsync(weapon);
                 if (!result)
                 {
@@ -114,6 +116,7 @@ namespace WeaponService.Controllers
             try
             {
                 var weapons = await WS.GetWeaponsAsync();
+
                 if (weapons == null || !weapons.Any())
                 {
                     return BadRequest(new { Success = false, Message = "Failed to get weapons" });
@@ -138,7 +141,7 @@ namespace WeaponService.Controllers
         //returns ok with a weapon if successful, bad request if failed
         //returns 500 if an error occurs
         //runs asynchronously
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetWeaponByIdAsync(int id)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponById");
@@ -170,7 +173,7 @@ namespace WeaponService.Controllers
         //returns ok with a weapon if successful, bad request if failed
         //returns 500 if an error occurs
         //runs asynchronously
-        [HttpGet("{type}")]
+        [HttpGet("type/{type}")]
         public async Task<IActionResult> GetWeaponByTypeAsync(string type)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponByType");

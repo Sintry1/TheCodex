@@ -1,3 +1,5 @@
+using Sentry.Profiling;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,6 +27,7 @@ builder.Logging.AddSentry(o =>
     o.Debug = true;
     o.TracesSampleRate = 1.0;
     o.ProfilesSampleRate = 1.0;
+    o.AddIntegration(new ProfilingIntegration());
 });
 
 var app = builder.Build();
@@ -36,7 +39,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

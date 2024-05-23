@@ -125,6 +125,7 @@ namespace EffectsDatabaseService
                 {
                     return NotFound();
                 }
+
                 return Ok(result);
             }
             catch (Exception e)

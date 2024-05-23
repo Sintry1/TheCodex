@@ -338,7 +338,7 @@ namespace EffectsDatabaseService
                             Effects effect = new Effects();
                             effect.Id = reader.GetInt32("id");
                             effect.Name = reader.GetString("name");
-                            effect.Description = reader.GetString("description");
+                            effect.Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString("description");
                             effects.Add(effect);
                         }
 

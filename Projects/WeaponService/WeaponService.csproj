@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Package\Resilience\Resilience.csproj" />
     <ProjectReference Include="..\..\Package\SharedModels\EffectsModel\EffectsModel.csproj" />
+    <ProjectReference Include="..\..\Package\SharedModels\WeaponModel\WeaponModel.csproj" />
   </ItemGroup>
 
 </Project>

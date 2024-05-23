@@ -4,12 +4,15 @@ using System.Text;
 using Polly;
 using Resilience;
 using EffectsModel;
+using WeaponModel;
+using System.Linq.Expressions;
 
 namespace WeaponService { 
     public class WeaponServices
     {
         private readonly HttpClient _client;
-        private string weaponUri = "http://localhost:5080/";
+        private readonly HttpClient effectClient;
+        private string weaponUri = "http://localhost:5008/";
         private string effectUri = "http://localhost:5059/";
         private readonly AsyncPolicy<HttpResponseMessage> _policy;
 
@@ -17,6 +20,7 @@ namespace WeaponService {
         public WeaponServices()
         {
             _client = new HttpClient();
+            effectClient = new HttpClient();
             _policy = Resilience.PollyPolicies.GetRetryAndCircuitBreakerPolicy();
         }
 
@@ -29,7 +33,7 @@ namespace WeaponService {
             try
             {
                 _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.PostAsJsonAsync("WeaponDatabaseService", weapon));
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.PostAsJsonAsync("WeaponDatabase/", weapon));
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -60,7 +64,7 @@ namespace WeaponService {
             try
             {
                 _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.PutAsJsonAsync($"WeaponDatabaseService", weapon));
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.PutAsJsonAsync($"WeaponDatabase/", weapon));
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -91,7 +95,7 @@ namespace WeaponService {
             try
             {
                 _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.DeleteAsync($"WeaponDatabaseService/{id}"));
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.DeleteAsync($"WeaponDatabase/{id}"));
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -123,34 +127,45 @@ namespace WeaponService {
             try
             {
                 _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync("WeaponDatabaseService"));
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync("WeaponDatabase/"));
 
 
-                //if the response is successful, Call EffectService API to get the effect name
+                //if the response is successful, Call EffectsService API to get the effect name
                 //and adding the effect name to the weapon object
                 //if the response is not successful, return an empty list
                 if (response.IsSuccessStatusCode)
                 {
                     List<Weapon> weapons = await response.Content.ReadFromJsonAsync<List<Weapon>>();
-                    _client.BaseAddress = new Uri(effectUri);
 
+                    Console.WriteLine("Get weapons");
+
+                    effectClient.BaseAddress = new Uri(effectUri);
+                    
                     foreach (Weapon weapon in weapons)
                     {
 
-                        // Call EffectService API to get the effect name
-                        // and adding the effect name to the weapon object
-                        // if the response is successful, add the effect name to the weapon object
-                        // if the response is not successful, add an empty string to the weapon Éffect property
-                        HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => _client.GetAsync($"EffectService/{weapon.EffectId}"));
-                        if (effectResponse.IsSuccessStatusCode)
+                        if (weapon.EffectId == null)
                         {
-                            Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
-                            weapon.Effect = effect.Name;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
-                            weapon.Effect = "";
+                            weapon.Effect = null;
+                        }else 
+                        { 
+                            // Call EffectsService API to get the effect name
+                            // and adding the effect name to the weapon object
+                            // if the response is successful, add the effect name to the weapon object
+                            // if the response is not successful, add an empty string to the weapon Éffect property
+                            HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => effectClient.GetAsync($"EffectsService/{weapon.EffectId}"));
+
+                            if (effectResponse.IsSuccessStatusCode)
+                            {
+                                Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
+
+                                weapon.Effect = effect.Name;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
+                                weapon.Effect = "";
+                            }
                         }
                     }
                     return weapons;
@@ -183,33 +198,39 @@ namespace WeaponService {
             try
             {
                 _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync($"WeaponDatabaseService/{id}"));
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync($"WeaponDatabase/id/{id}"));
 
-                //if the response is successful, Call EffectService API to get the effect name
+                //if the response is successful, Call EffectsService API to get the effect name
                 //and adding the effect name to the weapon object
                 //if the response is not successful, return an empty list
                 if (response.IsSuccessStatusCode)
                 {
                     Weapon weapon = await response.Content.ReadFromJsonAsync<Weapon>();
 
-                    _client.BaseAddress = new Uri(effectUri);
-
-
-                    // Call EffectService API to get the effect name
-                    // and adding the effect name to the weapon object
-                    // if the response is successful, add the effect name to the weapon object
-                    // if the response is not successful, add an empty string to the weapon Éffect property
-                    HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => _client.GetAsync($"EffectService/{weapon.EffectId}"));
-                    if (effectResponse.IsSuccessStatusCode)
+                    if(weapon.EffectId==null)
                     {
-
-                        Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
-                        weapon.Effect = effect.Name;
-                    }
-                    else
+                           weapon.Effect = null;
+                    } else 
                     {
-                        Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
-                        weapon.Effect = "";
+                        effectClient.BaseAddress = new Uri(effectUri);
+
+                        // Call EffectsService API to get the effect name
+                        // and adding the effect name to the weapon object
+                        // if the response is successful, add the effect name to the weapon object
+                        // if the response is not successful, add an empty string to the weapon Éffect property
+                        HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => effectClient.GetAsync($"EffectsService/{weapon.EffectId}"));
+
+                        if (effectResponse.IsSuccessStatusCode)
+                        {
+
+                            Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
+                            weapon.Effect = effect.Name;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
+                            weapon.Effect = "";
+                        }
                     }
                     return weapon;
                 }
@@ -239,34 +260,41 @@ namespace WeaponService {
         {
             try
             {
-                _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
-                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync($"WeaponDatabaseService/type/{type}"));
 
-                //if the response is successful, Call EffectService API to get the effect name
+                _client.BaseAddress = new Uri(weaponUri); // Add the base address of the WeaponDatabaseService API later
+                HttpResponseMessage response = await _policy.ExecuteAsync(() => _client.GetAsync($"WeaponDatabase/type/{type}"));
+
+                //if the response is successful, Call EffectsService API to get the effect name
                 //and adding the effect name to the weapon object
                 //if the response is not successful, return an empty list
                 if (response.IsSuccessStatusCode)
                 {
                     List<Weapon> weapons = await response.Content.ReadFromJsonAsync<List<Weapon>>();
 
-                    _client.BaseAddress = new Uri(effectUri);
+                    effectClient.BaseAddress= new Uri(effectUri);
                     foreach (Weapon weapon in weapons)
                     {
-
-                        // Call EffectService API to get the effect name
-                        // and adding the effect name to the weapon object
-                        // if the response is successful, add the effect name to the weapon object
-                        // if the response is not successful, add an empty string to the weapon Éffect property
-                        HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => _client.GetAsync($"EffectService/{weapon.EffectId}"));
-                        if (effectResponse.IsSuccessStatusCode)
+                        if (weapon.EffectId == null)
                         {
-                            Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
-                            weapon.Effect = effect.Name;
+                            weapon.Effect = null;
                         }
                         else
                         {
-                            Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
-                            weapon.Effect = "";
+                            // Call EffectsService API to get the effect name
+                            // and adding the effect name to the weapon object
+                            // if the response is successful, add the effect name to the weapon object
+                            // if the response is not successful, add an empty string to the weapon Éffect property
+                            HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => effectClient.GetAsync($"EffectsService/{weapon.EffectId}"));
+                            if (effectResponse.IsSuccessStatusCode)
+                            {
+                                Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
+                                weapon.Effect = effect.Name;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
+                                weapon.Effect = null;
+                            }
                         }
                     }
                     return weapons;

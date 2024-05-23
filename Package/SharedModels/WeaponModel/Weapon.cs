@@ -1,4 +1,4 @@
-namespace WeaponDatabaseService
+﻿namespace WeaponModel
 {
     public class Weapon
     {
@@ -7,8 +7,8 @@ namespace WeaponDatabaseService
         public string Slot { get; set; }
         public string Type { get; set; }
         public int? EffectId { get; set; }
-        public string Effect { get; set; }
-        public int MinimumDamage { get; set; }
-        public int MaximumDamage { get; set; }
+        public string? Effect { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
     }
-};
+}

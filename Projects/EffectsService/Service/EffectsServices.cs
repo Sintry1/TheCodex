@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Polly;
 using Resilience;
 using EffectsModel;
+using System.Linq.Expressions;
 
 namespace EffectsService
 {
@@ -145,11 +146,14 @@ namespace EffectsService
             {
                 //Makes a GET request to the EffectsDatabaseController to get all effects from the database
                 var response = await _policy.ExecuteAsync(() => _client.GetAsync(_uri + "EffectsDatabase"));
-
+                Console.WriteLine("got response");
                 //Returns the list of effect objects if the response is successful, null if not
                 if (response.IsSuccessStatusCode)
                 {
+                    //Reads the JSON data from the response
                     var effects = await response.Content.ReadAsStringAsync();
+                    
+                    //Deserializes the JSON data to a list of effect objects
                     List<Effects> effect = JsonConvert.DeserializeObject<List<Effects>>(effects);
                     return effect;
                 }

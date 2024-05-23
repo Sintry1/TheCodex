@@ -58,7 +58,7 @@ namespace EffectsService.Controllers
         public async Task<IActionResult> UpdateEffect(int id, [FromBody] Effects effect)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateEffect");
-
+            
             try
             {
                 effect.Id = id;
@@ -124,7 +124,7 @@ namespace EffectsService.Controllers
         public async Task<IActionResult> GetEffectById(int id)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("GetEffectById");
-
+            Console.WriteLine("getting effect");
             try
             {
                 Effects result = await ES.GetEffectById(id);

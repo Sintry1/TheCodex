@@ -1,4 +1,5 @@
 ﻿using System;
+using WeaponModel;
 
 namespace WeaponDatabaseService {
 	public class WeaponDatabaseServices
@@ -14,6 +15,7 @@ namespace WeaponDatabaseService {
         //returns a true if successful and false if failed
         public bool AddWeapon(Weapon weapon)
 		{
+
             try
 			{
                 //calls PreparedStatement InsertWeapon
@@ -98,7 +100,7 @@ namespace WeaponDatabaseService {
         //If an error occurs, it returns null
         public List<Weapon> GetWeaponsByType(string type)
 		{
-			try { 
+            try { 
 				//calls PreparedStatement GetWeaponsByType
 				return ps.GetWeaponsByType(type);
 			}

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WeaponModel;
 
 namespace WeaponDatabaseService
 {
@@ -21,9 +22,16 @@ namespace WeaponDatabaseService
         [HttpPost]
         public IActionResult CreateWeapon([FromBody] Weapon weapon)
         {
+            Console.WriteLine("You are now in the weapon database Controller");
+
             var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
             {
+                Console.WriteLine("Adding weapon");
+                //writes weapon min and max damage to console
+                Console.WriteLine($"Min Damage: {weapon.MinDamage}");
+                Console.WriteLine($"Max Damage: {weapon.MaxDamage}");
+
                 bool result = WDBS.AddWeapon(weapon);
                 if (!result)
                 {
@@ -111,7 +119,7 @@ namespace WeaponDatabaseService
         //calls WeaponDatabaseServices.GetWeaponByType() to get a weapon by its type
         //returns the weapon with the specified type
         //returns 500 if an error occurs
-        [HttpGet("{type}")]
+        [HttpGet("type/{type}")]
         public IActionResult GetWeaponByType(string type)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponByType");
@@ -119,9 +127,10 @@ namespace WeaponDatabaseService
             try
             {
                 List<Weapon> weapon = WDBS.GetWeaponsByType(type);
+
                 if (weapon == null || !weapon.Any())
                 {
-                    return BadRequest(new { Success = false, Message = "Failed to get weapon" });
+                    return BadRequest(new { Success = false, Message = "Failed to get weapons" });
                 }
                 else
                 {
@@ -150,6 +159,7 @@ namespace WeaponDatabaseService
             try
             {
                 List<Weapon> weapon = WDBS.GetAllWeapons();
+
                 if (weapon == null || !weapon.Any())
                 {
                     return BadRequest(new { Success = false, Message = "Failed to get weapon" });
@@ -173,7 +183,7 @@ namespace WeaponDatabaseService
         //calls WeaponDatabaseServices.GetWeaponById() to get a weapon by its id
         //returns the weapon with the specified id
         //returns 500 if an error occurs
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public IActionResult GetWeaponById(int id)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponById");

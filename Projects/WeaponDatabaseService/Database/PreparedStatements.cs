@@ -1,5 +1,6 @@
 ﻿﻿using DotNetEnv;
 using MySql.Data.MySqlClient;
+using WeaponModel;
 
 
 namespace WeaponDatabaseService
@@ -31,36 +32,46 @@ namespace WeaponDatabaseService
         //This method uses prepared statements to prevent SQL injection
         public bool InsertWeapon(Weapon weapon)
         {
+            Console.WriteLine("You are now in the weapon database Services");
             DotNetEnv.Env.Load();
 
             try
             {
+                Console.WriteLine("fetching ENV");
+                Console.WriteLine(Env.GetString("DB_USER"));
+                Console.WriteLine(Env.GetString("DB_PASS"));
                 // Set credentials for the user needed
                 dbConnection.SetConnectionCredentials(
                     Env.GetString("DB_USER"),
                     Env.GetString("DB_PASS"));
+
+                
 
                 // Use mySqlConnection to open the connection and throw an exception if it fails
                 using (MySqlConnection connection = dbConnection.OpenConnection())
                 {
                     try
                     {
+                        Console.WriteLine("Connection opened.");
                         // Create an instance of MySqlCommand
                         MySqlCommand command = new MySqlCommand(null, connection);
 
+                        Console.WriteLine("Command created.");
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"INSERT INTO weapons (name, slot, type, effectId, minimumDamage, maximumDamage) " +
-                            $"VALUES (@name, @slot, @type, @effectId, @minimumDamage, @maximumDamage)";
+                            $"INSERT INTO weapons (name, slot, type, effect, minDamage, maxDamage) " +
+                            $"VALUES (@name, @slot, @type, @effect, @minDamage, @maxDamage)";
 
+                        Console.WriteLine("Command text set.");
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
                         MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
                         MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId ?? (object)DBNull.Value);
-                        MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
-                        MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
+                        MySqlParameter effectParam = new MySqlParameter("effect", weapon.EffectId ?? (object)DBNull.Value);
+                        MySqlParameter minDamageParam = new MySqlParameter("minDamage", weapon.MinDamage);
+                        MySqlParameter maxDamageParam = new MySqlParameter("maxDamage", weapon.MaxDamage);
 
+                        Console.WriteLine("Parameters set.");
                         // Adds the parameters to the command
                         command.Parameters.Add(nameParam);
                         command.Parameters.Add(slotParam);
@@ -69,12 +80,15 @@ namespace WeaponDatabaseService
                         command.Parameters.Add(minDamageParam);
                         command.Parameters.Add(maxDamageParam);
 
+                        Console.WriteLine("Parameters added.");
+
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
+                        Console.WriteLine("Command prepared.");
 
                         // Execute the query
                         object result = command.ExecuteScalar();
-
+                        Console.WriteLine("Query executed.");
                         // Return true if no exceptions are thrown
                         return true;
                     }
@@ -141,18 +155,18 @@ namespace WeaponDatabaseService
                         }
                         if (weapon.EffectId != null)
                         {
-                            commandText += "effectId = @effectId, ";
-                            command.Parameters.AddWithValue("@effectId", weapon.EffectId);
+                            commandText += "effect = @effect, ";
+                            command.Parameters.AddWithValue("@effect", weapon.EffectId);
                         }
-                        if (weapon.MinimumDamage != null)
+                        if (weapon.MinDamage != null)
                         {
-                            commandText += "minimumDamage = @minimumDamage, ";
-                            command.Parameters.AddWithValue("@minimumDamage", weapon.MinimumDamage);
+                            commandText += "minDamage = @minDamage, ";
+                            command.Parameters.AddWithValue("@minDamage", weapon.MinDamage);
                         }
-                        if (weapon.MaximumDamage != null)
+                        if (weapon.MaxDamage != null)
                         {
-                            commandText += "maximumDamage = @maximumDamage, ";
-                            command.Parameters.AddWithValue("@maximumDamage", weapon.MaximumDamage);
+                            commandText += "maxDamage = @maxDamage, ";
+                            command.Parameters.AddWithValue("@maxDamage", weapon.MaxDamage);
                         }
                         commandText = commandText.TrimEnd(',', ' ') + " WHERE id = @id";
                         command.CommandText = commandText;
@@ -295,14 +309,15 @@ namespace WeaponDatabaseService
                                 Name = reader.GetString("name"),
                                 Slot = reader.GetString("slot"),
                                 Type = reader.GetString("type"),
-                                EffectId = reader.GetInt32("effect"),
-                                MinimumDamage = reader.GetInt32("minimumDamage"),
-                                MaximumDamage = reader.GetInt32("maximumDamage")
+                                EffectId = reader.IsDBNull(reader.GetOrdinal("effect")) ? (int?)null : reader.GetInt32("effect"),
+                                MinDamage = reader.GetInt32("minDamage"),
+                                MaxDamage = reader.GetInt32("maxDamage")
                             };
 
+                            Console.WriteLine("got a weapon");
                             weapons.Add(weapon);
                         }
-
+                        Console.WriteLine("got a list weapon");
                         // Return the list of weapons
                         return weapons;
                     }
@@ -375,9 +390,9 @@ namespace WeaponDatabaseService
                             weapon.Name = reader.GetString("name");
                             weapon.Slot = reader.GetString("slot");
                             weapon.Type = reader.GetString("type");
-                            weapon.EffectId = reader.GetInt32("effect");
-                            weapon.MinimumDamage = reader.GetInt32("minimumDamage");
-                            weapon.MaximumDamage = reader.GetInt32("maximumDamage");
+                            weapon.EffectId = reader.IsDBNull(reader.GetOrdinal("effect")) ? (int?)null : reader.GetInt32("effect");
+                            weapon.MinDamage = reader.GetInt32("minDamage");
+                            weapon.MaxDamage = reader.GetInt32("maxDamage");
                         }
 
                         // Return the weapon object
@@ -424,6 +439,7 @@ namespace WeaponDatabaseService
                 {
                     try
                     {
+                        
                         // Create an instance of MySqlCommand
                         MySqlCommand command = new MySqlCommand(null, connection);
 
@@ -454,12 +470,14 @@ namespace WeaponDatabaseService
                                 Name = reader.GetString("name"),
                                 Slot = reader.GetString("slot"),
                                 Type = reader.GetString("type"),
-                                EffectId = reader.GetInt32("effect"),
-                                MinimumDamage = reader.GetInt32("minimumDamage"),
-                                MaximumDamage = reader.GetInt32("maximumDamage")
+                                EffectId = reader.IsDBNull(reader.GetOrdinal("effect")) ? (int?)null : reader.GetInt32("effect"),
+                                MinDamage = reader.GetInt32("minDamage"),
+                                MaxDamage = reader.GetInt32("maxDamage")
                             };
 
+
                             weapons.Add(weapon);
+
                         }
 
                         // Return the list of weapons
