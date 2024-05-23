@@ -73,6 +73,27 @@ public class CreatureDatabaseServices
         }
     }
 
+	//delete an existing creature entry
+	//takes an _id of the creature to delete
+	//returns true if successful, false if not
+	//return false if an error occurs
+	public bool DeleteCreatureById(string id)
+	{
+        try
+		{
+            //call DeleteCreatureById from DatabaseOperations
+            return _dbOperations.DeleteCreatureById(id);
+        }
+        catch (Exception e)
+		{
+            //log error message
+            //Log error to more secure location
+            Console.WriteLine("Error deleting creature: " + e.Message);
+            return false;
+        }
+    }
+
+
 	//get a creature entry
 	//takes a name of the creature to get
 	//returns the creature object if found, null if not

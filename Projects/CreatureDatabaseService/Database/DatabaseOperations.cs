@@ -91,6 +91,30 @@ namespace CreatureDatabaseService
             }
         }
 
+        //delete creature by id
+        //takes an id
+        //returns true if successful, false if not
+        public bool DeleteCreatureById(string id)
+        {
+            // Find the creature in the database and delete it
+            var filter = Builders<Creature>.Filter.Eq(c => c._id, id);
+
+            // Delete the creature
+            var result = _creaturesCollection.DeleteOne(filter);
+
+            if (result.DeletedCount > 0)
+            {
+                Console.WriteLine("Creature deleted successfully.");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("No creature found with the given Id.");
+                return false;
+            }
+        }
+
+
         // Get all creatures
         // Returns a list of all creatures
         public List<Creature> ReadAllCreatures()

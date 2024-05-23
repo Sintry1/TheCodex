@@ -111,6 +111,31 @@ namespace CreatureService
             }
         }
 
+        //Delete a creature entry
+        //Takes the _id of the creature to delete
+        //Calls the CreatureDatabaseService to delete a creature entry
+        //Returns true if successful, false if not
+        //Returns false if an error occurs
+        //Runs asynchronously
+        public async Task<bool> DeleteCreatureById(string id)
+        {
+            try
+            {
+                // Make a DELETE request to the CreatureDatabaseService to delete a creature entry
+                var response = await _policy.ExecuteAsync(() => _client.DeleteAsync(uri + "/CreatureDatabase/id/" + id));
+
+                // Returns true if the response is successful, false if not
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception e)
+            {
+                // Log errors to Sentry when added.
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+
         // Get a creature entry
         // Takes a name of the creature to get
         // Calls the CreatureDatabaseService to get a creature entry

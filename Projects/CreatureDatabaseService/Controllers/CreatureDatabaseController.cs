@@ -112,6 +112,38 @@ namespace CreatureDatabaseService.Controllers
             }
         }
 
+        // Method for deleting an existing creature entry by id
+        // Takes an id of the creature to delete
+        // calls DeleteCreatureById from CreatureDatabaseServices
+        // returns ok if successful, bad request if not
+        //returns error code 500 if an error occurs
+        [HttpDelete("id/{id}")]
+        public IActionResult DeleteCreatureById(string id)
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteCreatureById");
+            try
+            {
+                if (CDBS.DeleteCreatureById(id))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+
         // Method for getting all creatures
         // calls GetAllCreatures from CreatureDatabaseServices
         // returns ok if successful, bad request if not
