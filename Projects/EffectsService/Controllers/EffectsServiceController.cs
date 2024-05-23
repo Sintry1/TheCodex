@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using EffectsModel;
 
 namespace EffectsService.Controllers
 {
@@ -53,13 +54,14 @@ namespace EffectsService.Controllers
         //Returns Success with true if the effect was updated, BadRequest if not
         //returns 500 if an error occurs
         //Runs asynchronously
-        [HttpPut]
-        public async Task<IActionResult> UpdateEffect(Effects effect)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEffect(int id, [FromBody] Effects effect)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateEffect");
 
             try
             {
+                effect.Id = id;
                 bool result = await ES.UpdateEffect(effect);
 
                 if (!result)
@@ -85,7 +87,7 @@ namespace EffectsService.Controllers
         //Calls EffectsServices.DeleteEffect() to delete an effect from the database
         //Returns Success with true if the effect was deleted, BadRequest if not
         //returns 500 if an error occurs
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEffect(int id)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteEffect");

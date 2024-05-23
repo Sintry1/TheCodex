@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Polly;
 using Resilience;
+using EffectsModel;
 
 namespace EffectsService
 {

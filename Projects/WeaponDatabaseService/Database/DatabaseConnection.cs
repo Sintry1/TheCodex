@@ -24,8 +24,7 @@ namespace WeaponDatabaseService
             Env.Load();
 
             // Set connection string with default values from .env file
-            serverConnectionString =
-                $"Server={Env.GetString("DB_HOST")};Port={Env.GetString("DB_PORT")};Database={Env.GetString("DB_NAME")};";
+            serverConnectionString = $"Server={Env.GetString("DB_HOST")};Port={Env.GetString("DB_PORT")};Database={Env.GetString("DB_NAME")};";
             connection.ConnectionString = serverConnectionString;
         }
 

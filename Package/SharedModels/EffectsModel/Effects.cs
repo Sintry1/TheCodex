@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace EffectsService {
+namespace EffectsModel
+{
     public class Effects
     {
         public int Id { get; set; }

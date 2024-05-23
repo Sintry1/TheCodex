@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using EffectsModel;
 
 namespace EffectsDatabaseService
 {
@@ -8,8 +9,9 @@ namespace EffectsDatabaseService
     {
 
         //abbreviation for EffectsDatabaseServices
-        private EffectsDatabaseServices FDBS = new EffectsDatabaseServices();
+        private EffectsDatabaseServices EDBS = new EffectsDatabaseServices();
         private readonly IHub _sentryHub;
+        
 
         //constructor for EffectsDatabaseController
         public EffectsDatabaseController(IHub sentryHub)
@@ -20,13 +22,13 @@ namespace EffectsDatabaseService
         //calls EffectsDatabaseServices.AddEffects() to add a effect to the database
         //returns the true if it was added, false if not
         [HttpPost]
-        public IActionResult CreateEffects(Effects effect)
+        public IActionResult CreateEffects([FromBody] Effects effect)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("CreateEffect");
 
             try
             {
-                bool result = FDBS.AddEffect(effect);
+                bool result = EDBS.AddEffect(effect);
                 if (!result)
                 {
                     return BadRequest(new { Success = false, Message = "Failed to add effect" });
@@ -51,13 +53,14 @@ namespace EffectsDatabaseService
         //calls EffectsDatabaseServices.UpdateEffect() to update a effect in the database
         //returns true if the effect was updated, false if not
         [HttpPut]
-        public IActionResult UpdateEffects(Effects effect)
+        public IActionResult UpdateEffects([FromBody] Effects effect)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateEffect");
 
             try
             {
-                bool result = FDBS.UpdateEffect(effect);
+                effect.Id = id;
+                bool result = EDBS.UpdateEffect(effect);
 
                 if (!result)
                 {
@@ -88,7 +91,7 @@ namespace EffectsDatabaseService
 
             try
             {
-                bool result = FDBS.DeleteEffect(id);
+                bool result = EDBS.DeleteEffect(id);
                 if (!result)
                 {
                     return BadRequest(new { Success = false, Message = "Failed to delete effect" });
@@ -118,7 +121,7 @@ namespace EffectsDatabaseService
 
             try
             {
-                Effects result = FDBS.GetEffectById(id);
+                Effects result = EDBS.GetEffectById(id);
                 if (result == null)
                 {
                     return NotFound();
@@ -145,12 +148,12 @@ namespace EffectsDatabaseService
 
             try
             {
-                List<Effects> result = FDBS.GetAllEffects();
+                List<Effects> result = EDBS.GetAllEffects();
 
                 if (result == null || !result.Any())
                 {
                     //Return 404 if no feats are found
-                    return NotFound();
+                    return NotFound("Feat not found");
 
                 }
                 else

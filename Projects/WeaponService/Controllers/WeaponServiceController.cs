@@ -19,7 +19,7 @@ namespace WeaponService.Controllers
         //returns 500 if an error occurs
         //runs asynchronously
         [HttpPost]
-        public async Task<IActionResult> AddWeaponAsync(Weapon weapon)
+        public async Task<IActionResult> AddWeaponAsync([FromBody] Weapon weapon)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
@@ -47,12 +47,13 @@ namespace WeaponService.Controllers
         // returns Ok if successful, bad request if failed
         //returns 500 if an error occurs
         //runs asynchronously
-        [HttpPut]
-        public async Task<IActionResult> UpdateWeaponAsync(Weapon weapon)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateWeaponAsync(int id, [FromBody] Weapon weapon)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateWeapon");
             try
             {
+                weapon.Id = id;
                 bool result = await WS.UpdateWeaponAsync(weapon);
                 if (!result)
                 {

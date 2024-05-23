@@ -19,7 +19,7 @@ namespace WeaponDatabaseService
         //returns true if the weapon was added, false if not
         // returns 500 if an error occurs
         [HttpPost]
-        public IActionResult CreateWeapon(Weapon weapon)
+        public IActionResult CreateWeapon([FromBody] Weapon weapon)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
@@ -50,7 +50,7 @@ namespace WeaponDatabaseService
         //retyrns true if the weapon was updated, false if not
         //returns 500 if an error occurs
         [HttpPut]
-        public IActionResult UpdateWeapon(Weapon weapon)
+        public IActionResult UpdateWeapon([FromBody] Weapon weapon)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateWeapon");
 

@@ -51,13 +51,13 @@ namespace WeaponDatabaseService
                         // Create and prepare an SQL statement.
                         command.CommandText =
                             $"INSERT INTO weapons (name, slot, type, effectId, minimumDamage, maximumDamage) " +
-                            $"VALUES (@name, @slot, @type, @effect, @minimumDamage, @maximumDamage)";
+                            $"VALUES (@name, @slot, @type, @effectId, @minimumDamage, @maximumDamage)";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
                         MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
                         MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId);
+                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId ?? (object)DBNull.Value);
                         MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
                         MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
 
@@ -81,7 +81,6 @@ namespace WeaponDatabaseService
                     catch (MySqlException ex)
                     {
                         // Handle the exception (e.g., log it) and return false
-                        // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return false;
                     }
@@ -98,6 +97,7 @@ namespace WeaponDatabaseService
                 return false;
             }
         }
+
 
         //Method for updating a weapon in the database
         //This method takes a weapon object as a parameter
@@ -123,27 +123,43 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText =
-                            $"UPDATE weapons SET name = @name, slot = @slot, type = @type, effectId = @effectId, " +
-                            $"minimumDamage = @minimumDamage, maximumDamage = @maximumDamage WHERE id = @id";
+                        string commandText = "UPDATE weapons SET ";
+                        if (weapon.Name != null)
+                        {
+                            commandText += "name = @name, ";
+                            command.Parameters.AddWithValue("@name", weapon.Name);
+                        }
+                        if (weapon.Slot != null)
+                        {
+                            commandText += "slot = @slot, ";
+                            command.Parameters.AddWithValue("@slot", weapon.Slot);
+                        }
+                        if (weapon.Type != null)
+                        {
+                            commandText += "type = @type, ";
+                            command.Parameters.AddWithValue("@type", weapon.Type);
+                        }
+                        if (weapon.EffectId != null)
+                        {
+                            commandText += "effectId = @effectId, ";
+                            command.Parameters.AddWithValue("@effectId", weapon.EffectId);
+                        }
+                        if (weapon.MinimumDamage != null)
+                        {
+                            commandText += "minimumDamage = @minimumDamage, ";
+                            command.Parameters.AddWithValue("@minimumDamage", weapon.MinimumDamage);
+                        }
+                        if (weapon.MaximumDamage != null)
+                        {
+                            commandText += "maximumDamage = @maximumDamage, ";
+                            command.Parameters.AddWithValue("@maximumDamage", weapon.MaximumDamage);
+                        }
+                        commandText = commandText.TrimEnd(',', ' ') + " WHERE id = @id";
+                        command.CommandText = commandText;
 
                         // Sets mySQL parameters for the prepared statement
-                        MySqlParameter idParam = new MySqlParameter("id", weapon.Id);
-                        MySqlParameter nameParam = new MySqlParameter("name", weapon.Name);
-                        MySqlParameter slotParam = new MySqlParameter("slot", weapon.Slot);
-                        MySqlParameter typeParam = new MySqlParameter("type", weapon.Type);
-                        MySqlParameter effectParam = new MySqlParameter("effectId", weapon.EffectId);
-                        MySqlParameter minDamageParam = new MySqlParameter("minimumDamage", weapon.MinimumDamage);
-                        MySqlParameter maxDamageParam = new MySqlParameter("maximumDamage", weapon.MaximumDamage);
-
-                        // Adds the parameters to the command
+                        MySqlParameter idParam = new MySqlParameter("@id", weapon.Id);
                         command.Parameters.Add(idParam);
-                        command.Parameters.Add(nameParam);
-                        command.Parameters.Add(slotParam);
-                        command.Parameters.Add(typeParam);
-                        command.Parameters.Add(effectParam);
-                        command.Parameters.Add(minDamageParam);
-                        command.Parameters.Add(maxDamageParam);
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
@@ -157,7 +173,6 @@ namespace WeaponDatabaseService
                     catch (MySqlException ex)
                     {
                         // Handle the exception (e.g., log it) and return false
-                        // We may want to implement secure logging to store the error message
                         Console.WriteLine($"Error executing query: {ex.Message}");
                         return false;
                     }

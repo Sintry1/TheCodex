@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Text;
 using Polly;
 using Resilience;
+using EffectsModel;
 
 namespace WeaponService { 
     public class WeaponServices
@@ -143,7 +144,7 @@ namespace WeaponService {
                         HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => _client.GetAsync($"EffectService/{weapon.EffectId}"));
                         if (effectResponse.IsSuccessStatusCode)
                         {
-                            Effect effect = await effectResponse.Content.ReadFromJsonAsync<Effect>();
+                            Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
                             weapon.Effect = effect.Name;
                         }
                         else
@@ -202,7 +203,7 @@ namespace WeaponService {
                     if (effectResponse.IsSuccessStatusCode)
                     {
 
-                        Effect effect = await effectResponse.Content.ReadFromJsonAsync<Effect>();
+                        Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
                         weapon.Effect = effect.Name;
                     }
                     else
@@ -259,7 +260,7 @@ namespace WeaponService {
                         HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => _client.GetAsync($"EffectService/{weapon.EffectId}"));
                         if (effectResponse.IsSuccessStatusCode)
                         {
-                            Effect effect = await effectResponse.Content.ReadFromJsonAsync<Effect>();
+                            Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
                             weapon.Effect = effect.Name;
                         }
                         else
