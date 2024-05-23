@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Package\Resilience\Resilience.csproj" />
+    <ProjectReference Include="..\..\Package\SharedModels\CreatureModel\CreatureModel.csproj" />
   </ItemGroup>
 
 </Project>

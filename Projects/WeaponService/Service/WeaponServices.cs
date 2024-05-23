@@ -14,14 +14,13 @@ namespace WeaponService {
         private readonly HttpClient effectClient;
         private string weaponUri = "http://localhost:5008/";
         private string effectUri = "http://localhost:5059/";
-        private readonly AsyncPolicy<HttpResponseMessage> _policy;
+        private readonly AsyncPolicy<HttpResponseMessage> _policy = PollyPolicies.GetRetryAndCircuitBreakerPolicy();
 
         // Constructor
         public WeaponServices()
         {
             _client = new HttpClient();
             effectClient = new HttpClient();
-            _policy = Resilience.PollyPolicies.GetRetryAndCircuitBreakerPolicy();
         }
 
         // This method calls the WeaponDatabaseService API to add a new weapon to the database

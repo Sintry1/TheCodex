@@ -1,5 +1,6 @@
 ﻿using CreatureDatabaseService;
 using System;
+using CreatureModel;
 
 public class CreatureDatabaseServices
 {
@@ -76,12 +77,12 @@ public class CreatureDatabaseServices
 	//takes a name of the creature to get
 	//returns the creature object if found, null if not
 	//return null if an error occurs
-	public Creature GetCreature(string creatureName)
+	public List<Creature> GetCreaturesByName(string creatureName)
 	{
         try
 		{
             //call GetCreature from DatabaseOperations
-            return _dbOperations.ReadCreatureByName(creatureName);
+            return _dbOperations.ReadCreaturesByName(creatureName);
         }
         catch (Exception e)
 		{
@@ -111,5 +112,25 @@ public class CreatureDatabaseServices
         }
     }
 
+
+	//get a creature entry
+	//takes an _id of the creature to get
+	//returns the creature object if found, null if not
+	//return null if an error occurs
+	public Creature GetCreatureById(string id)
+	{
+        try
+		{
+            //call GetCreatureById from DatabaseOperations
+            return _dbOperations.ReadCreatureById(id);
+        }
+        catch (Exception e)
+		{
+            //log error message
+            //Log error to more secure location
+            Console.WriteLine("Error getting creature: " + e.Message);
+            return null;
+        }
+    }
 
 }

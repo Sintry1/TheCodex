@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using CreatureModel;
 
 namespace CreatureService.Controllers
 {
@@ -85,7 +86,7 @@ namespace CreatureService.Controllers
         // Returns ok if successful, bad request if not
         // Returns error code 500 if an error occurs
         // Runs asynchronously
-        [HttpDelete]
+        [HttpDelete("{creatureName}")]
         public IActionResult DeleteCreature(string creatureName)
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteCreature");
@@ -119,15 +120,18 @@ namespace CreatureService.Controllers
         // Returns error code 500 if an error occurs
         // Runs asynchronously
         [HttpGet("{creatureName}")]
-        public IActionResult GetCreature(string creatureName)
+        public IActionResult GetCreaturesByName(string creatureName)
         {
-            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreature");
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreatures");
             try
             {
-                var creature = _creatureServices.GetCreature(creatureName).Result;
-                if (creature != null)
+                Console.WriteLine("Getting creatures: " + creatureName);
+
+                var creatures = _creatureServices.GetAllCreatures(creatureName).Result;
+                if (creatures != null && creatures.Any())
                 {
-                    return Ok(creature);
+                    Console.WriteLine("Returning creatures");
+                    return Ok(creatures);
                 }
                 else
                 {
@@ -161,6 +165,42 @@ namespace CreatureService.Controllers
                 if (creatures != null || creatures.Any())
                 {
                     return Ok(creatures);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                // Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
+                // Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
+        // Method for getting a creature entry
+        // Takes the _id of the creature to get
+        // Calls GetCreatureById from CreatureServices
+        // Returns the creature object if successful, null if not
+        // Returns error code 500 if an error occurs
+        // Runs asynchronously
+        [HttpGet("id/{id}")]
+        public IActionResult GetCreatureById(string id)
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreatureById");
+            try
+            {
+                Console.WriteLine("Getting creature: " + id);
+
+                var creature = _creatureServices.GetCreatureById(id).Result;
+                if (creature != null)
+                {
+                    Console.WriteLine("Returning creature");
+                    return Ok(creature);
                 }
                 else
                 {

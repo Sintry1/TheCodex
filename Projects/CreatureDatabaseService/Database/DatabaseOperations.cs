@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using CreatureModel;
 
 namespace CreatureDatabaseService
 {
@@ -111,14 +112,51 @@ namespace CreatureDatabaseService
         // Takes a name
         // Returns a creature object if found, null if not
         //returns null if an error occurs
-        public Creature ReadCreatureByName(string name)
+        public List<Creature> ReadCreaturesByName(string name)
+        {
+            try
+            {
+                Console.WriteLine("finding creatures: " + name);
+                // Find the creatures in the database
+                var filter = Builders<Creature>.Filter.Regex(c => c.Name, new BsonRegularExpression(name, "i"));
+
+                // Get the creatures
+                var creatures = _creaturesCollection.Find(filter).ToList();
+
+                Console.WriteLine("Creatures found.");
+
+                // Add the creatures to a new list
+                var creatureList = new List<Creature>(creatures);
+
+                Console.WriteLine("Number of creatures found: " + creatures.Count);
+
+
+                Console.WriteLine(creatureList);
+                foreach (var creature in creatures)
+                {
+                       Console.WriteLine("Creature: " + creature.Name);
+                }
+
+                Console.WriteLine("returning creatures from db");
+                // Return the list of creatures
+                return creatureList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error reading creatures: " + e.Message);
+                return null;
+            }
+        }
+
+        // Get a creature by id
+        // Takes an id
+        // Returns a creature object if found, null if not
+        public Creature ReadCreatureById(string id)
         {
             try
             {
                 // Find the creature in the database
-                var filter = Builders<Creature>.Filter.Eq(c => c.Name, name);
-                
-                // Return the creature
+                var filter = Builders<Creature>.Filter.Eq(c => c._id, id);
                 return _creaturesCollection.Find(filter).FirstOrDefault();
             }
             catch (Exception e)
@@ -127,7 +165,6 @@ namespace CreatureDatabaseService
                 return null;
             }
         }
-
 
 
     }

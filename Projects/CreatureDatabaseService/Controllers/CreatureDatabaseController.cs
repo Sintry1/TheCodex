@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CreatureModel;
 
 namespace CreatureDatabaseService.Controllers
 {
@@ -148,19 +149,23 @@ namespace CreatureDatabaseService.Controllers
         // returns ok if successful, bad request if not
         //returns error code 500 if an error occurs
         [HttpGet("{creatureName}")]
-        public IActionResult GetCreature(string creatureName)
+        public IActionResult GetCreatures(string creatureName)
         {
-            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreature");
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreatures");
+            Console.WriteLine("Getting creatures: " + creatureName + " from database.");
 
             try
             {
-                var creature = CDBS.GetCreature(creatureName);
-                if (creature != null)
+                var creatures = CDBS.GetCreaturesByName(creatureName);
+
+                if (creatures != null && creatures.Any())
                 {
-                    return Ok(creature);
+                    Console.WriteLine("returning creatures");
+                    return Ok(creatures);
                 }
                 else
                 {
+                    Console.WriteLine("no creatures found");
                     return BadRequest();
                 }
             }
@@ -174,6 +179,44 @@ namespace CreatureDatabaseService.Controllers
                 return StatusCode(500);
             }
         }
+
+        // Method for getting a creature by _id
+        // Takes an _id of the creature to get
+        // calls GetCreature from CreatureDatabaseServices
+        // returns ok if successful, bad request if not
+        // returns error code 500 if an error occurs
+        [HttpGet("id/{id}")]
+        public IActionResult GetCreatureById(string id)
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetCreatureById");
+            Console.WriteLine("Getting creature: " + id + " from database.");
+
+            try
+            {
+                var creature = CDBS.GetCreatureById(id);
+
+                if (creature != null)
+                {
+                    Console.WriteLine("returning creature");
+                    return Ok(creature);
+                }
+                else
+                {
+                    Console.WriteLine("no creature found");
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                //Log errors to Sentry when added.
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e); // Return 500 Internal Server Error if an exception occurs
+
+                //Return 500 if an error occurs
+                return StatusCode(500);
+            }
+        }
+
 
     }
 }

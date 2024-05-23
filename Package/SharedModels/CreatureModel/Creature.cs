@@ -1,7 +1,13 @@
-﻿namespace CreatureModel
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace CreatureModel
 {
     public class Creature
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string _id { get; set; }
         public string Name { get; set; }
         public float ChallengeRating { get; set; }
         public string Attacks { get; set; }

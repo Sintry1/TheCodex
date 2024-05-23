@@ -13,7 +13,7 @@ namespace EffectsService
     {
         private readonly HttpClient _client = new HttpClient();
         private readonly string _uri = "http://localhost:5231/";
-        private readonly AsyncPolicy<HttpResponseMessage> _policy = Resilience.PollyPolicies.GetRetryAndCircuitBreakerPolicy();
+        private readonly AsyncPolicy<HttpResponseMessage> _policy = PollyPolicies.GetRetryAndCircuitBreakerPolicy();
 
         //constructor for EffectsServices
         public EffectsServices()

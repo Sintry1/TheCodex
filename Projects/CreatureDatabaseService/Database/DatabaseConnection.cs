@@ -5,10 +5,10 @@ namespace CreatureDatabaseService
 {
     public class MongoDBConnection : IDisposable
     {
-        private MongoClient client;
-        private IMongoDatabase database;
-        private string connectionString;
-        private string databaseName;
+        private MongoClient? client;
+        private IMongoDatabase? database;
+        private string? connectionString;
+        private string? databaseName;
 
         // Constructor for MongoDBConnection
         public MongoDBConnection()
@@ -25,17 +25,20 @@ namespace CreatureDatabaseService
         public void SetConnectionCredentials(string username, string password, string dbHost, string dbName)
         {
             // Create the connection string
-            connectionString = $"mongodb+srv://{username}:{password}@{dbHost}/?retryWrites=true&w=majority&{dbName}";
-            
+            connectionString = $"mongodb+srv://{username}:{password}@{dbHost}/?retryWrites=true&w=majority";
+
             // Create the client and database
             client = new MongoClient(connectionString);
-            
+
+            // Set the database name
+            databaseName = dbName;
+
             // Get the database
             database = client.GetDatabase(databaseName);
         }
 
         // Get the database
-        public IMongoDatabase GetDatabase()
+        public IMongoDatabase? GetDatabase()
         {
             // Return the database
             return database;
@@ -43,7 +46,10 @@ namespace CreatureDatabaseService
 
         public void Dispose()
         {
-            
+            client = null;
+            database = null;
+            connectionString = null;
+            databaseName = null;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Polly;
 using Resilience;
+using CreatureModel;
 
 namespace CreatureService
 {
@@ -97,7 +98,7 @@ namespace CreatureService
             try
             {
                 // Make a DELETE request to the CreatureDatabaseService to delete a creature entry
-                var response = await _policy.ExecuteAsync(() => _client.DeleteAsync(uri + "/CreatureDatabase?creatureName=" + creatureName));
+                var response = await _policy.ExecuteAsync(() => _client.DeleteAsync(uri + "/CreatureDatabase/" + creatureName));
 
                 // Returns true if the response is successful, false if not
                 return response.IsSuccessStatusCode;
@@ -115,18 +116,19 @@ namespace CreatureService
         // Calls the CreatureDatabaseService to get a creature entry
         // Returns a creature object if successful, null if not
         // Runs asynchronously
-        public async Task<Creature> GetCreature(string creatureName)
+        public async Task<List<Creature>> GetAllCreatures(string creatureName)
         {
             try
             {
+                Console.WriteLine("Getting creature: " + creatureName + ", Calling CreatureDatabase");
                 // Make a GET request to the CreatureDatabaseService to get a creature entry
-                var response = await _policy.ExecuteAsync(() => _client.GetAsync(uri + "/CreatureDatabase?creatureName=" + creatureName));
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(uri + "/CreatureDatabase/" + creatureName));
 
-                // Returns the creature object if the response is successful, null if not
+                // Returns a list of creature objects if the response is successful, null if not
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Creature>(content);
+                    return JsonConvert.DeserializeObject<List<Creature>>(content);
                 }
                 else
                 {
@@ -158,6 +160,37 @@ namespace CreatureService
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<List<Creature>>(content);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                // Log errors to Sentry when added.
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        // Get a creature entry
+        // Takes the _id of the creature to get
+        // Calls the CreatureDatabaseService to get a creature entry
+        // Returns a creature object if successful, null if not
+        // Runs asynchronously
+        public async Task<Creature> GetCreatureById(string id)
+        {
+            try
+            {
+                // Make a GET request to the CreatureDatabaseService to get a creature entry
+                var response = await _policy.ExecuteAsync(() => _client.GetAsync(uri + "/CreatureDatabase/id/" + id));
+
+                // Returns a creature object if the response is successful, null if not
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<Creature>(content);
                 }
                 else
                 {
