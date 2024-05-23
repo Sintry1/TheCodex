@@ -50,7 +50,7 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"INSERT INTO Weapons (name, slot, type, effectId, minimumDamage, maximumDamage) " +
+                            $"INSERT INTO weapons (name, slot, type, effectId, minimumDamage, maximumDamage) " +
                             $"VALUES (@name, @slot, @type, @effect, @minimumDamage, @maximumDamage)";
 
                         // Sets mySQL parameters for the prepared statement
@@ -124,7 +124,7 @@ namespace WeaponDatabaseService
 
                         // Create and prepare an SQL statement.
                         command.CommandText =
-                            $"UPDATE Weapons SET name = @name, slot = @slot, type = @type, effectId = @effectId, " +
+                            $"UPDATE weapons SET name = @name, slot = @slot, type = @type, effectId = @effectId, " +
                             $"minimumDamage = @minimumDamage, maximumDamage = @maximumDamage WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
@@ -199,7 +199,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = $"DELETE FROM Weapons WHERE id = @id";
+                        command.CommandText = $"DELETE FROM weapons WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter idParam = new MySqlParameter("id", id);
@@ -260,7 +260,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons";
+                        command.CommandText = "SELECT * FROM weapons";
 
                         // Call Prepare after setting the Commandtext and Parameters.
                         command.Prepare();
@@ -336,7 +336,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons WHERE id = @id";
+                        command.CommandText = "SELECT * FROM weapons WHERE id = @id";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter idParam = new MySqlParameter("id", id);
@@ -413,7 +413,7 @@ namespace WeaponDatabaseService
                         MySqlCommand command = new MySqlCommand(null, connection);
 
                         // Create and prepare an SQL statement.
-                        command.CommandText = "SELECT * FROM Weapons WHERE type = @type";
+                        command.CommandText = "SELECT * FROM weapons WHERE type = @type";
 
                         // Sets mySQL parameters for the prepared statement
                         MySqlParameter typeParam = new MySqlParameter("type", type);
