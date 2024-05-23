@@ -59,7 +59,6 @@ namespace EffectsDatabaseService
 
             try
             {
-                effect.Id = id;
                 bool result = EDBS.UpdateEffect(effect);
 
                 if (!result)
