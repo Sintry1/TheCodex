@@ -1,4 +1,7 @@
 const axios = require("axios");
+import axiosRetry from "axios-retry";
+
+axiosRetry(axios, { retries: 3 });
 
 const create = async ({ name, slot, type, effect }) => {
   try {

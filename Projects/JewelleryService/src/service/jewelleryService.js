@@ -1,4 +1,7 @@
 const axios = require("axios");
+import axiosRetry from "axios-retry";
+
+axiosRetry(axios, { retries: 3 });
 
 const create = async ({ name, type, effect }) => {
   try {
@@ -15,7 +18,9 @@ const create = async ({ name, type, effect }) => {
 
 const getAll = async () => {
   try {
-    const response = await axios.get("http://localhost:3004/jewelleryDatabase/");
+    const response = await axios.get(
+      "http://localhost:3004/jewelleryDatabase/"
+    );
     console.log(response.data);
     return response.data;
   } catch (e) {
