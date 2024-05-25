@@ -40,7 +40,7 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const result = await jewelleryService.deleteArmour(req.params.id);
+    const result = await jewelleryService.deleteJewellery(req.params.id);
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send(error.message);
