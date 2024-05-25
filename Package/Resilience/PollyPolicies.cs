@@ -60,6 +60,8 @@ namespace Resilience
 
         public static AsyncPolicyWrap<HttpResponseMessage> GetRetryAndCircuitBreakerPolicy()
         {
+            // Return a new AsyncPolicyWrap<HttpResponseMessage> object
+            // The policy wraps the retry and circuit breaker policies in a single policy
             return Policy.WrapAsync(GetRetryPolicy(), GetCircuitBreakerPolicy());
         }
 
