@@ -1,7 +1,25 @@
 const axios = require("axios");
-import axiosRetry from "axios-retry";
+const axiosRetry = require("axios-retry").default;
 
-axiosRetry(axios, { retries: 3 });
+axiosRetry(axios, {
+  retries: 3,
+  retryDelay: (retryCount) => {
+    console.log(`retry attempt: ${retryCount}`);
+    switch (retryCount) {
+      case 1:
+        return 1000; // 1 second delay before the first retry
+      case 2:
+        return 3000; // 3 seconds delay before the second retry
+      case 3:
+        return 3000; // 3 seconds delay before the third retry
+      default:
+        return 1000; // Default delay
+    }
+  },
+  retryCondition: (error) => {
+    return error.code !== "ECONNABORTED";
+  },
+});
 
 const create = async ({ name, type, effect }) => {
   try {
@@ -12,7 +30,11 @@ const create = async ({ name, type, effect }) => {
     console.log(response.data);
     return response.data;
   } catch (e) {
-    console.error(e);
+    if (e.code === "ECONNABORTED") {
+      console.error("Request failed after 3 retries");
+    } else {
+      console.error(`Error in create: ${e.code} - ${e.message}`);
+    }
   }
 };
 
@@ -24,7 +46,11 @@ const getAll = async () => {
     console.log(response.data);
     return response.data;
   } catch (e) {
-    console.error(e);
+    if (e.code === "ECONNABORTED") {
+      console.error("Request failed after 3 retries");
+    } else {
+      console.error(`Error in getAll: ${e.code} - ${e.message}`);
+    }
   }
 };
 
@@ -36,7 +62,11 @@ const getById = async (id) => {
     console.log(response.data);
     return response.data;
   } catch (e) {
-    console.error(e);
+    if (e.code === "ECONNABORTED") {
+      console.error("Request failed after 3 retries");
+    } else {
+      console.error(`Error in getById: ${e.code} - ${e.message}`);
+    }
   }
 };
 
@@ -49,11 +79,15 @@ const update = async (id, { name, type, effect }) => {
     console.log(response.data);
     return response.data;
   } catch (e) {
-    console.error(e);
+    if (e.code === "ECONNABORTED") {
+      console.error("Request failed after 3 retries");
+    } else {
+      console.error(`Error in update: ${e.code} - ${e.message}`);
+    }
   }
 };
 
-const deleteArmour = async (id) => {
+const deleteJewellery = async (id) => {
   try {
     const response = await axios.delete(
       `http://localhost:3004/jewelleryDatabase/${id}`
@@ -61,7 +95,11 @@ const deleteArmour = async (id) => {
     console.log(response.data);
     return response.data;
   } catch (e) {
-    console.error(e);
+    if (e.code === "ECONNABORTED") {
+      console.error("Request failed after 3 retries");
+    } else {
+      console.error(`Error in deleteJewellery: ${e.code} - ${e.message}`);
+    }
   }
 };
 
@@ -70,5 +108,5 @@ module.exports = {
   getAll,
   getById,
   update,
-  deleteArmour,
+  deleteJewellery,
 };
