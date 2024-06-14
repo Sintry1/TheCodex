@@ -6,6 +6,7 @@ using Resilience;
 using EffectsModel;
 using WeaponModel;
 using System.Linq.Expressions;
+using Polly.CircuitBreaker;
 
 namespace WeaponService { 
     public class WeaponServices
@@ -147,22 +148,35 @@ namespace WeaponService {
                         {
                             weapon.Effect = null;
                         }else 
-                        { 
-                            // Call EffectsService API to get the effect name
-                            // and adding the effect name to the weapon object
-                            // if the response is successful, add the effect name to the weapon object
-                            // if the response is not successful, add an empty string to the weapon Éffect property
-                            HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => effectClient.GetAsync($"EffectsService/{weapon.EffectId}"));
-
-                            if (effectResponse.IsSuccessStatusCode)
+                        {
+                            try
                             {
-                                Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
+                                // Call EffectsService API to get the effect name
+                                // and adding the effect name to the weapon object
+                                // if the response is successful, add the effect name to the weapon object
+                                // if the response is not successful, add an empty string to the weapon Éffect property
+                                HttpResponseMessage effectResponse = await _policy.ExecuteAsync(() => effectClient.GetAsync($"EffectsService/{weapon.EffectId}"));
 
-                                weapon.Effect = effect.Name;
+                                if (effectResponse.IsSuccessStatusCode)
+                                {
+                                    Effects effect = await effectResponse.Content.ReadFromJsonAsync<Effects>();
+
+                                    weapon.Effect = effect.Name;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
+                                    weapon.Effect = "";
+                                }
                             }
-                            else
+                            catch (BrokenCircuitException bce)
                             {
-                                Console.WriteLine($"Error: {effectResponse.StatusCode} - {effectResponse.ReasonPhrase}");
+                                Console.WriteLine($"Circuit breaker is open: {bce.Message}");
+                                weapon.Effect = ""; // Proceed with default value
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Unexpected error: {e.Message}");
                                 weapon.Effect = "";
                             }
                         }

@@ -9,8 +9,9 @@ namespace CreatureService.Controllers
     {
         private CreatureServices _creatureServices = new CreatureServices();
         private readonly IHub _sentryHub;
+        private readonly ILogger<CreatureServiceController> _logger;
 
-        public CreatureServiceController(IHub sentryHub)
+        public CreatureServiceController(ILogger<CreatureServiceController> _logger, IHub sentryHub)
         {
             _sentryHub = sentryHub;
         }

@@ -11,12 +11,13 @@ namespace EffectsDatabaseService
         //abbreviation for EffectsDatabaseServices
         private EffectsDatabaseServices EDBS = new EffectsDatabaseServices();
         private readonly IHub _sentryHub;
-        
+        private readonly ILogger<EffectsDatabaseController> _logger;
 
         //constructor for EffectsDatabaseController
-        public EffectsDatabaseController(IHub sentryHub)
+        public EffectsDatabaseController(ILogger<EffectsDatabaseController> logger, IHub sentryHub)
         {
             _sentryHub = sentryHub;
+            _logger = logger;
         }
 
         //calls EffectsDatabaseServices.AddEffects() to add a effect to the database

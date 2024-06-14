@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WeaponModel;
+using Sentry;
+using Microsoft.Extensions.Logging;
 
 namespace WeaponDatabaseService
 {
@@ -10,10 +12,12 @@ namespace WeaponDatabaseService
 
         private readonly IHub _sentryHub;
         private WeaponDatabaseServices WDBS = new WeaponDatabaseServices();
+        private readonly ILogger<WeaponDatabaseController> _logger;
 
-        public WeaponDatabaseController(IHub sentryHub)
+        public WeaponDatabaseController(ILogger<WeaponDatabaseController> logger, IHub sentryHub)
         {
             _sentryHub = sentryHub;
+            _logger = logger;
         }
 
         //calls WeaponDatabaseServices.AddWeapon() to add a weapon to the database

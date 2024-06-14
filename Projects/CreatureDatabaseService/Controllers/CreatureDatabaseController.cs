@@ -12,11 +12,13 @@ namespace CreatureDatabaseService.Controllers
 
         private CreatureDatabaseServices CDBS = new CreatureDatabaseServices();
         private readonly IHub _sentryHub;
+        private readonly ILogger<CreatureDatabaseController> _logger;
 
         // Constructor for CreatureDatabaseController
-        public CreatureDatabaseController(IHub sentryHub)
+        public CreatureDatabaseController(ILogger<CreatureDatabaseController> logger, IHub sentryHub)
         {
             _sentryHub = sentryHub;
+            _logger = logger;
         }
 
 

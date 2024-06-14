@@ -11,11 +11,13 @@ namespace EffectsService.Controllers
 
         private EffectsServices ES = new EffectsServices();
         private readonly IHub _sentryHub;
+        private readonly ILogger<EffectsServiceController> _logger;
 
         //Constructor for EffectsServiceController
-        public EffectsServiceController(IHub sentryHub)
+        public EffectsServiceController(ILogger<EffectsServiceController> logger,IHub sentryHub)
 		{
             _sentryHub = sentryHub;
+            _logger = logger;
         }
 
         //Calls EffectsServices.CreateEffect() to add an effect to the database

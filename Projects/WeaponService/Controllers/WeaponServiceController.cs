@@ -10,9 +10,12 @@ namespace WeaponService.Controllers
 
         private readonly IHub _sentryHub;
         private WeaponServices WS = new WeaponServices();
-        public WeaponServiceController(IHub sentryHub)
+        private readonly ILogger<WeaponServiceController> _logger;
+
+        public WeaponServiceController(ILogger<WeaponServiceController> logger,IHub sentryHub)
         {
             _sentryHub = sentryHub;
+            _logger = logger;
         }
 
         //Calls WeaponServices.AddWeaponAsync() to add a weapon to the database
