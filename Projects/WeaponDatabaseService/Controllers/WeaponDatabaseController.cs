@@ -22,15 +22,10 @@ namespace WeaponDatabaseService
         [HttpPost]
         public IActionResult CreateWeapon([FromBody] Weapon weapon)
         {
-            Console.WriteLine("You are now in the weapon database Controller");
 
             var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
             {
-                Console.WriteLine("Adding weapon");
-                //writes weapon min and max damage to console
-                Console.WriteLine($"Min Damage: {weapon.MinDamage}");
-                Console.WriteLine($"Max Damage: {weapon.MaxDamage}");
 
                 bool result = WDBS.AddWeapon(weapon);
                 if (!result)

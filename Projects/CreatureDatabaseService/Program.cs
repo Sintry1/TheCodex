@@ -20,6 +20,16 @@ builder.Services.AddCors(options =>
         });
 });
 
+
+SentrySdk.Init(options =>
+{
+    options.Dsn = "https://3148ff56b0e94e37a61069aa9e998362@o4506960048881664.ingest.us.sentry.io/4507288528748544";
+    options.ExperimentalMetrics = new ExperimentalMetricsOptions
+    {
+        EnableCodeLocations = true
+    };
+});
+
 // Add Sentry
 builder.Logging.AddSentry(o =>
 {

@@ -1,115 +1,113 @@
 ﻿using System;
+using Sentry;
 using WeaponModel;
 
-namespace WeaponDatabaseService {
-	public class WeaponDatabaseServices
-	{
+namespace WeaponDatabaseService
+{
+    public class WeaponDatabaseServices
+    {
+        private readonly IHub _sentryHub;
+        private PreparedStatements ps = PreparedStatements.CreateInstance();
 
-		private PreparedStatements ps = PreparedStatements.CreateInstance();
-		public WeaponDatabaseServices()
-		{
+        public WeaponDatabaseServices()
+        {
 
-		}
+        }
 
-        //Calls PreparedStatement InsertWeapon to add a weapon to the database
-        //returns a true if successful and false if failed
         public bool AddWeapon(Weapon weapon)
-		{
-
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("AddWeapon");
             try
-			{
-                //calls PreparedStatement InsertWeapon
+            {
                 return ps.InsertWeapon(weapon);
             }
             catch (Exception e)
-			{
+            {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
         }
 
-		//Calls PreparedStatement UpdateWeapon to update a weapon, given the ID, in the database
-		//returns a true if successful and false if failed
-		public bool UpdateWeapon(Weapon weapon)
-		{
+        public bool UpdateWeapon(Weapon weapon)
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("UpdateWeapon");
             try
-			{
-                //calls PreparedStatement UpdateWeapon
+            {
                 return ps.UpdateWeapon(weapon);
             }
             catch (Exception e)
-			{
+            {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
         }
 
-		//Calls PreparedStatement DeleteWeapon to delete a weapon from the database
-		//returns a true if successful and false if failed
-		public bool DeleteWeapon(int id)
-		{
+        public bool DeleteWeapon(int id)
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("DeleteWeapon");
             try
-			{
-                //calls PreparedStatement DeleteWeapon
+            {
                 return ps.DeleteWeapon(id);
             }
             catch (Exception e)
-			{
+            {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return false;
             }
         }
 
-        //Calls PreparedStatement GetWeaponById to get a weapon by its ID
-        //returns a weapon
-        //If an error occurs, it returns null
         public Weapon GetWeaponById(int id)
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponById");
             try
             {
-                //calls PreparedStatement GetWeaponById
                 return ps.GetWeaponById(id);
             }
             catch (Exception e)
             {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return null;
             }
         }
 
-
-        //Calls PreparedStatement GetAllWeapons to get all weapons from the database
-        //returns a list of all weapons
-        //If an error occurs, it returns null
         public List<Weapon> GetAllWeapons()
         {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetAllWeapons");
             try
             {
-                //calls PreparedStatement GetAllWeapons
                 return ps.GetAllWeapons();
             }
             catch (Exception e)
             {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
                 Console.WriteLine($"Unexpected error: {e.Message}");
                 return null;
             }
         }
 
-        //Calls PreparedStatement GetWeaponsByType to get all weapons of a certain type from the database
-        //returns a list of all weapons of a certain type
-        //If an error occurs, it returns null
         public List<Weapon> GetWeaponsByType(string type)
-		{
-            try { 
-				//calls PreparedStatement GetWeaponsByType
-				return ps.GetWeaponsByType(type);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Unexpected error: {e.Message}");
-				return null;
-			}
-		}	
-
+        {
+            var childSpan = _sentryHub.GetSpan()?.StartChild("GetWeaponsByType");
+            try
+            {
+                return ps.GetWeaponsByType(type);
+            }
+            catch (Exception e)
+            {
+                _sentryHub.CaptureException(e);
+                childSpan?.Finish(e);
+                Console.WriteLine($"Unexpected error: {e.Message}");
+                return null;
+            }
+        }
     }
 }

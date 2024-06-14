@@ -10,6 +10,7 @@
     <PackageReference Include="DotNetEnv" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+    <PackageReference Include="Sentry.AspNet" Version="4.7.0" />
     <PackageReference Include="Sentry.AspNetCore" Version="4.6.2" />
     <PackageReference Include="Sentry.EntityFramework" Version="4.6.2" />
     <PackageReference Include="Sentry.Profiling" Version="4.6.2" />

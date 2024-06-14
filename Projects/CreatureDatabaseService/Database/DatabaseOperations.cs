@@ -140,28 +140,15 @@ namespace CreatureDatabaseService
         {
             try
             {
-                Console.WriteLine("finding creatures: " + name);
                 // Find the creatures in the database
                 var filter = Builders<Creature>.Filter.Regex(c => c.Name, new BsonRegularExpression(name, "i"));
 
                 // Get the creatures
                 var creatures = _creaturesCollection.Find(filter).ToList();
 
-                Console.WriteLine("Creatures found.");
-
                 // Add the creatures to a new list
                 var creatureList = new List<Creature>(creatures);
 
-                Console.WriteLine("Number of creatures found: " + creatures.Count);
-
-
-                Console.WriteLine(creatureList);
-                foreach (var creature in creatures)
-                {
-                       Console.WriteLine("Creature: " + creature.Name);
-                }
-
-                Console.WriteLine("returning creatures from db");
                 // Return the list of creatures
                 return creatureList;
             }
