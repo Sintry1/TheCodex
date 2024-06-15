@@ -32,10 +32,12 @@ namespace EffectsDatabaseService
                 bool result = EDBS.AddEffect(effect);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to add effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect added successfully" });
                 }
             }
@@ -64,10 +66,12 @@ namespace EffectsDatabaseService
 
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to update effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect updated successfully" });
                 };
             }
@@ -94,10 +98,12 @@ namespace EffectsDatabaseService
                 bool result = EDBS.DeleteEffect(id);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to delete effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect deleted successfully" });
                 }
             }
@@ -124,9 +130,11 @@ namespace EffectsDatabaseService
                 Effects result = EDBS.GetEffectById(id);
                 if (result == null)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return NotFound();
                 }
 
+                childSpan?.Finish(SpanStatus.Ok);
                 return Ok(result);
             }
             catch (Exception e)
@@ -153,12 +161,14 @@ namespace EffectsDatabaseService
 
                 if (result == null || !result.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     //Return 404 if no feats are found
                     return NotFound("Feat not found");
 
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(result);
                 }
             }

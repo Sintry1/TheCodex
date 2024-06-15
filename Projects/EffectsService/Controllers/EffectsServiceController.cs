@@ -34,10 +34,12 @@ namespace EffectsService.Controllers
                 bool result = await ES.AddEffect(effect);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to add effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect added successfully" });
                 }
             }
@@ -68,10 +70,12 @@ namespace EffectsService.Controllers
 
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to update effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect updated successfully" });
                 }
             }
@@ -100,10 +104,12 @@ namespace EffectsService.Controllers
 
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to delete effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Effect deleted successfully" });
                 }
             }
@@ -132,10 +138,12 @@ namespace EffectsService.Controllers
                 Effects result = await ES.GetEffectById(id);
                 if (result == null)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get effect" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(result);
                 }
             }
@@ -164,10 +172,12 @@ namespace EffectsService.Controllers
                 List<Effects> result = await ES.GetAllEffects();
                 if (result == null || !result.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get effects" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(result);
                 }
             }

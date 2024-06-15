@@ -34,10 +34,12 @@ namespace CreatureDatabaseService.Controllers
             try {  
                 if (CDBS.CreateCreature(creature))
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok();
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest();
                 }
             } catch (Exception e)
@@ -65,10 +67,12 @@ namespace CreatureDatabaseService.Controllers
             {
                 if (CDBS.UpdateCreature(creature))
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok();
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest();
                 }
             }
@@ -96,10 +100,12 @@ namespace CreatureDatabaseService.Controllers
             {
                 if (CDBS.DeleteCreature(creatureName))
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok();
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest();
                 }
             }
@@ -127,10 +133,12 @@ namespace CreatureDatabaseService.Controllers
             {
                 if (CDBS.DeleteCreatureById(id))
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok();
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest();
                 }
             }
@@ -159,10 +167,12 @@ namespace CreatureDatabaseService.Controllers
                 var creatures = CDBS.GetAllCreatures();
                 if (creatures != null || creatures.Any())
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(creatures);
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest();
                 }
             }
@@ -194,11 +204,13 @@ namespace CreatureDatabaseService.Controllers
 
                 if (creatures != null && creatures.Any())
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     Console.WriteLine("returning creatures");
                     return Ok(creatures);
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     Console.WriteLine("no creatures found");
                     return BadRequest();
                 }
@@ -231,11 +243,13 @@ namespace CreatureDatabaseService.Controllers
 
                 if (creature != null)
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     Console.WriteLine("returning creature");
                     return Ok(creature);
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     Console.WriteLine("no creature found");
                     return BadRequest();
                 }

@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Polly" Version="8.4.0" />
-    <PackageReference Include="Sentry.AspNet" Version="4.7.0" />
     <PackageReference Include="Sentry.AspNetCore" Version="4.6.2" />
     <PackageReference Include="Sentry.EntityFramework" Version="4.6.2" />
     <PackageReference Include="Sentry.Profiling" Version="4.6.2" />

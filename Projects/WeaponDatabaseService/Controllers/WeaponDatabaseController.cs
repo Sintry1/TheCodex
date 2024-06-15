@@ -34,10 +34,12 @@ namespace WeaponDatabaseService
                 bool result = WDBS.AddWeapon(weapon);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to add weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon added successfully" });
                 }
             }
@@ -67,10 +69,12 @@ namespace WeaponDatabaseService
 
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to update weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon updated successfully" });
                 }
             }
@@ -97,10 +101,12 @@ namespace WeaponDatabaseService
                 bool result = WDBS.DeleteWeapon(id);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to delete weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon deleted successfully" });
                 }
             }
@@ -129,10 +135,12 @@ namespace WeaponDatabaseService
 
                 if (weapon == null || !weapon.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapons" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapon);
                 }
             }
@@ -161,10 +169,12 @@ namespace WeaponDatabaseService
 
                 if (weapon == null || !weapon.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapon);
                 }
             }
@@ -192,10 +202,12 @@ namespace WeaponDatabaseService
                 Weapon weapon = WDBS.GetWeaponById(id);
                 if (weapon == null)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapon);
                 }
             }

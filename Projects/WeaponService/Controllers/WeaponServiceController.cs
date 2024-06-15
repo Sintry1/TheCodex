@@ -32,10 +32,12 @@ namespace WeaponService.Controllers
                 bool result = await WS.AddWeaponAsync(weapon);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to add weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon added successfully" });
                 }
             }
@@ -62,10 +64,12 @@ namespace WeaponService.Controllers
                 bool result = await WS.UpdateWeaponAsync(weapon);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to update weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon updated successfully" });
                 }
             }
@@ -91,10 +95,12 @@ namespace WeaponService.Controllers
                 bool result = await WS.DeleteWeaponAsync(id);
                 if (!result)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to delete weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(new { Success = true, Message = "Weapon deleted successfully" });
                 }
             }
@@ -122,10 +128,12 @@ namespace WeaponService.Controllers
 
                 if (weapons == null || !weapons.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapons" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapons);
                 }
             }
@@ -154,10 +162,12 @@ namespace WeaponService.Controllers
                 var weapon = await WS.GetWeaponByIdAsync(id);
                 if (weapon == null)
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapon);
                 }
             }
@@ -185,10 +195,12 @@ namespace WeaponService.Controllers
                 List<Weapon> weapon = await WS.GetWeaponsByTypeAsync(type);
                 if (weapon == null || !weapon.Any())
                 {
+                    childSpan?.Finish(SpanStatus.InternalError);
                     return BadRequest(new { Success = false, Message = "Failed to get weapon" });
                 }
                 else
                 {
+                    childSpan?.Finish(SpanStatus.Ok);
                     return Ok(weapon);
                 }
             }

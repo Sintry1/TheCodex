@@ -20,23 +20,25 @@ builder.Services.AddCors(options =>
         });
 });
 
-SentrySdk.Init(options =>
+
+builder.WebHost.UseSentry(options =>
 {
     options.Dsn = "https://3148ff56b0e94e37a61069aa9e998362@o4506960048881664.ingest.us.sentry.io/4507288528748544";
+    options.Debug = true; // Enable Sentry SDK debugging
+    options.TracesSampleRate = 1.0; // Adjust this value for sampling traces
+    options.ProfilesSampleRate = 1.0; // Adjust this value for sampling profiles
+    options.AttachStacktrace = true;
+    options.EnableTracing = true;
+    options.AddIntegration(new ProfilingIntegration());
     options.ExperimentalMetrics = new ExperimentalMetricsOptions
     {
         EnableCodeLocations = true
     };
 });
 
-// Add Sentry
 builder.Logging.AddSentry(o =>
 {
-    o.Dsn = "https://3148ff56b0e94e37a61069aa9e998362@o4506960048881664.ingest.us.sentry.io/4507288528748544"; //Add url here
-    o.Debug = true;
-    o.TracesSampleRate = 1.0;
-    o.ProfilesSampleRate = 1.0;
-    o.AddIntegration(new ProfilingIntegration());
+    o.InitializeSdk = false; // Prevent re-initialization
 });
 
 var app = builder.Build();
