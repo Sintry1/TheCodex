@@ -6,16 +6,7 @@ axiosRetry(axios, {
   retries: 3,
   retryDelay: (retryCount) => {
     console.log(`retry attempt: ${retryCount}`);
-    switch (retryCount) {
-      case 1:
-        return 1000; // 1 second delay before the first retry
-      case 2:
-        return 3000; // 3 seconds delay before the second retry
-      case 3:
-        return 3000; // 3 seconds delay before the third retry
-      default:
-        return 1000; // Default delay
-    }
+    return retryCount * 2000;
   },
   retryCondition: (error) => {
     return error.code !== "ECONNABORTED";
